@@ -10,6 +10,7 @@ import { QuestionComponent } from './question/question.component';
 import { RadioQuestionComponent } from './radio-question/radio-question.component';
 import { CheckboxQuestionComponent } from './checkbox-question/checkbox-question.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
+import { RadioClickQuestionComponent } from './radio-click-question/radio-click-question.component';
 //import page
 //import question
 
@@ -20,7 +21,8 @@ import { ProgressBarComponent } from './progress-bar/progress-bar.component';
     QuestionComponent,
     RadioQuestionComponent,
     CheckboxQuestionComponent,
-    ProgressBarComponent
+    ProgressBarComponent,
+    RadioClickQuestionComponent
   ],
   imports: [
     BrowserModule,
