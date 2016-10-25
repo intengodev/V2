@@ -11,8 +11,8 @@ import { RadioQuestionComponent } from './radio-question/radio-question.componen
 import { CheckboxQuestionComponent } from './checkbox-question/checkbox-question.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { RadioClickQuestionComponent } from './radio-click-question/radio-click-question.component';
-//import page
-//import question
+import { QuestionListComponent } from './question-list/question-list.component';
+import { QuestionListService }    from './question-list/question-list-service';
 
 @NgModule({
   declarations: [
@@ -22,14 +22,15 @@ import { RadioClickQuestionComponent } from './radio-click-question/radio-click-
     RadioQuestionComponent,
     CheckboxQuestionComponent,
     ProgressBarComponent,
-    RadioClickQuestionComponent
+    RadioClickQuestionComponent,
+    QuestionListComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule
   ],
-  providers: [],
+  providers: [QuestionListService],
   bootstrap: [AppComponent]
 })
 export class App {}

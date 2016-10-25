@@ -1,15 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit } 		from '@angular/core';
+
+import { QuestionListComponent }  	from '../question-list/question-list.component';
 
 @Component({
-  selector: 'app-page',
+  selector: 'page',
   templateUrl: './page.component.html',
   styleUrls: ['./page.component.css']
 })
 export class PageComponent implements OnInit {
+	public title:string;
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+	constructor(){
+		this.title = 'sample page';
+	}
+	
+	ngOnInit(){}
 
 }
