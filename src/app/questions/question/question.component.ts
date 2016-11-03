@@ -1,6 +1,6 @@
 
 import { Component, OnInit } from '@angular/core';
-
+import { BehaviorSubject } 	 from 'rxjs/BehaviorSubject';
 
 @Component({
   selector: 'app-question',
@@ -12,11 +12,18 @@ export class QuestionComponent implements OnInit {
   private hightlightState = 0;
   private blinkInterval;
   private blinkRate;
+  private selectionSubject = new BehaviorSubject(null);
 
   constructor(){}
   ngOnInit(){}
 
-  toggleSelection(target, blinkRate, animationSpeed){
+  /*
+  * Highlights the selection and does the nice blinking effect
+  * returns a BehaviorSubject
+  */
+  toggleSelection(target, blinkRate, animationSpeed):any{
+  	console.log('parent toggle selection');
+
   	this.clearOptionSelections(document.querySelectorAll('.matrix-options .option'));
 
   	window['that'] = this;
@@ -24,11 +31,10 @@ export class QuestionComponent implements OnInit {
   	this.highlight(target);
 
   	this.blinkInterval = window.setInterval(function(){
-  		console.log('firing interval: ', animationSpeed);
   		window['that'].highlight(target);
   	}, animationSpeed);
 
-  	return false;
+  	return this.selectionSubject;
   }
 
   clearOptionSelections(targets){
@@ -48,6 +54,8 @@ export class QuestionComponent implements OnInit {
 		this.blinked = 0;
 		this.hightlightState = 0;
 		delete this.blinkInterval;
+		this.selectionSubject.complete();
+
 		return false;
 	}
 

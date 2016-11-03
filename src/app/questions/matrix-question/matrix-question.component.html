@@ -5,11 +5,19 @@
 			<i class="arrow circle left icon"></i>
 		</a>
 		
-		<ul class="questions-container">
-			<li *ngFor="let question of questions; let i = index;" id="question-{{i}}">
-				{{ question.text }}
-			</li>
-		</ul>
+		<div class="questions-container">
+			<ul class="questions">
+				<li id="question-{{i}}" class="question" *ngFor="let question of questions; let i = index;" [class.current]="i == currentPager">
+					{{ question.text }}
+				</li>
+			</ul>
+			<ul class="pager">
+				<li *ngFor="let pager of questions; let i = index;" id="pager-{{i}}">
+					<i class="circle icon" aria-hidden="true" *ngIf="i == currentPager"></i>
+					<i class="circle outline icon" aria-hidden="true" *ngIf="i != currentPager"></i>
+				</li>
+			</ul>
+		</div>
 		
 		<a href="#" class="btn right">
 			<i class="arrow circle right icon"></i>
@@ -17,7 +25,7 @@
 	</div>
 
 	<ul class="matrix-options">
-		<li *ngFor="let option of options; let i = index;" class="option" id="option-{{i}}" (click)="toggleSelection($event.target, 7, 100)">
+		<li *ngFor="let option of options; let i = index;" class="option" id="option-{{i}}" (click)="toggleChildSelection($event.target, 7, 100)">
 			{{ option.text }}
 		</li>
 	</ul>
