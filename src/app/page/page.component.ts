@@ -1,7 +1,7 @@
 
 import { Component, OnInit } 		from '@angular/core';
 
-import { QuestionListComponent }  	from '../question-list/question-list.component';
+import { QuestionListComponent }  	from '../questions/question-list/question-list.component';
 
 @Component({
   selector: 'page',

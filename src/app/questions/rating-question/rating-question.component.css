@@ -1,0 +1,7 @@
+
+.ui.rating {
+    margin: 10px 0;
+    display: inline-block;
+    background: rgba(45, 45, 45, .7);
+    border: 1px solid #000;
+}

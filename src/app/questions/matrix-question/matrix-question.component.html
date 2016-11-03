@@ -1,0 +1,24 @@
+
+<div class="matrix-container">
+	<div class="matrix-questions">
+		<a href="#" class="btn left">
+			<i class="arrow circle left icon"></i>
+		</a>
+		
+		<ul class="questions-container">
+			<li *ngFor="let question of questions; let i = index;" id="question-{{i}}">
+				{{ question.text }}
+			</li>
+		</ul>
+		
+		<a href="#" class="btn right">
+			<i class="arrow circle right icon"></i>
+		</a>
+	</div>
+
+	<ul class="matrix-options">
+		<li *ngFor="let option of options; let i = index;" class="option" id="option-{{i}}" (click)="toggleSelection($event.target, 7, 100)">
+			{{ option.text }}
+		</li>
+	</ul>
+</div>
