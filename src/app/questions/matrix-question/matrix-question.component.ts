@@ -63,10 +63,19 @@ export class MatrixQuestionComponent extends QuestionComponent {
   	return false;
   }
 
-  advanceQuestion(){
+  advanceQuestion($event?){
+  	var count;
+	if(typeof $event !== 'undefined'){
+		count = ($event.target.classList.contains('left') == true) ? (this.currentPager - 1) : (this.currentPager + 1);
+	} else {
+		count = (this.currentPager + 1);
+	}
+
   	this.animateOutOldQuestion(this.currentPager);
-  	this.incrementPager((this.currentPager + 1));
+  	this.incrementPager(count);
   	this.animateInNewQuestion(this.currentPager);
+
+  	return false;
   }
 
   animateOutOldQuestion(oldQuestionIdx){

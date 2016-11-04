@@ -1,30 +1,8 @@
 
 <div class="ui form checkbox-question">
-  <div class="grouped fields">
-    <label>How often do you use checkboxes?</label>
-    <div class="field">
-      <div class="ui  checkbox">
-        <input type="checkbox" name="example2" checked="checked">
-        <label>Once a week</label>
-      </div>
-    </div>
-    <div class="field">
-      <div class="ui  checkbox">
-        <input type="checkbox" name="example2">
-        <label>2-3 times a week</label>
-      </div>
-    </div>
-    <div class="field">
-      <div class="ui  checkbox">
-        <input type="checkbox" name="example2">
-        <label>Once a day</label>
-      </div>
-    </div>
-    <div class="field">
-      <div class="ui  checkbox">
-        <input type="checkbox" name="example2">
-        <label>Twice a day</label>
-      </div>
-    </div>
-  </div>
+  <ul class="question-options">
+    <li id="question-{{i}}" class="question" *ngFor="let question of questions; let i = index;" [class.current]="i == currentPager">
+      {{ question.text }}
+    </li>
+  </ul>
 </div>

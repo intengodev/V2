@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+
+import { Component } from '@angular/core';
 
 declare var $:any;
 
@@ -7,10 +8,7 @@ declare var $:any;
   templateUrl: './rating-question.component.html',
   styleUrls: ['./rating-question.component.css']
 })
-export class RatingQuestionComponent implements OnInit {
-  constructor(){}
-  ngOnInit(){}
-
+export class RatingQuestionComponent {
   ngAfterViewChecked(){
   	$('.ui.rating').rating('setting', 'clearable', true);
   }

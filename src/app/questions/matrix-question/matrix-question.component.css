@@ -6,7 +6,7 @@
 	margin: 0 auto;
 }
 
-.btn { position: absolute; top: 40px; opacity: .7; transition: opacity 300ms; font-size: 14pt; }
+.btn { position: absolute; top: 40px; opacity: .7; transition: opacity 300ms; font-size: 14pt; z-index: 10; }
 .btn.left  { left: 0;  }
 .btn.right { right: 0; }
 .btn:hover { opacity: 1; color: #efefef; }
