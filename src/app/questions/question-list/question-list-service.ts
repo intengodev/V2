@@ -1,21 +1,31 @@
 
 import { Injectable } 		from '@angular/core';
+import { Mocks }	from '../../mocks';
 
-import { MockQuestions }	from './questions.mock';
-let mocks = new MockQuestions;
+let mocks = new Mocks;
 
 @Injectable()
 export class QuestionListService {
 	private questionsAnswered:number = 0;
-	public  questions = [];
+	public  questions = [];	
+	private tmp:any   = {};
 
-	constructor(){
-		this.questions = mocks.questions;
+	/*
+	* Fetches By Page Order, not by page id
+	*/
+	setQuestionsForPage(page_idx){
+		this.tmp.questionKeysForPage = mocks.pages[page_idx].questions;
+		this.tmp.questionsForPage 	= [];
+		
+		mocks.questions.forEach( question => {
+			if(this.tmp.questionKeysForPage.includes(question._id)) this.tmp.questionsForPage.push(question);
+		}, this);
+
+		this.questions = this.tmp.questionsForPage;
+		//rm tmp
 	}
 
-	fetchQuestions(page_id){
-		//console.log('QuestionListService:page_id - ', page_id);
-		//some nifty http observable to get questions by page_id
+	getQuestionsForPage(page_idx){
 		return this.questions;
 	}
 }

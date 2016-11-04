@@ -16,7 +16,7 @@ window['factories'] = {};
   selector: 'question-list',
   templateUrl: './question-list.component.html',
   styleUrls: ['./question-list.component.css'],
-  inputs: ['project_id', 'user_id', 'page_id'],
+  inputs: ['project_id', 'user_id', 'page_idx'],
   entryComponents: [
   	CheckboxQuestionComponent,
   	RatingQuestionComponent,
@@ -24,10 +24,9 @@ window['factories'] = {};
   ]
 })
 export class QuestionListComponent {
-	@ViewChild('container', {read:ViewContainerRef}) container;
 	public  dev = false;
 	public  questions:any;
-	public  page_id:number;
+	public  page_idx:number;
 	private componentRefs;
 
 	constructor(
@@ -37,20 +36,21 @@ export class QuestionListComponent {
 	){}
 	
 	ngAfterContentInit(){
-		this.questions 			= this.qss.fetchQuestions(this.page_id);
+		this.qss.setQuestionsForPage(this.page_idx);
+		this.questions 			= this.qss.getQuestionsForPage(this.page_idx);
 		
-		this.createFactories();
-		this.componentRefs = this.fetchQuestionComponents(this.questions);
+		this.createQuestionFactories();
+		this.componentRefs = this.projectQuestionComponents(this.questions);
 	}
 
-	createFactories(){
+	createQuestionFactories(){
 		//1) Create a ComponentFactory	
 		window['factories'].CheckboxQuestionFactory = this.componentFactoryResolver.resolveComponentFactory(CheckboxQuestionComponent);		
 		window['factories'].RatingQuestionFactory   = this.componentFactoryResolver.resolveComponentFactory(RatingQuestionComponent);
 		window['factories'].MatrixQuestionFactory   = this.componentFactoryResolver.resolveComponentFactory(MatrixQuestionComponent);
 	}
 
-	fetchQuestionComponents(questions){
+	projectQuestionComponents(questions){
 		window['that'] = this;
 		var _questionComponents = [];
 		
@@ -63,9 +63,5 @@ export class QuestionListComponent {
 		});
 
 		return _questionComponents;
-	}
-
-	projectQuestions(questionComponents){
-		console.log(questionComponents);
 	}
 }

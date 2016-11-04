@@ -24,7 +24,7 @@ import { MatrixQuestionComponent }    from './questions/matrix-question/matrix-q
 const routes: Routes =[
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: PageComponent },
-  { path: ':project_id/:user_id/:page_id', component: PageComponent }
+  { path: ':project_id/:user_id/:page_idx', component: PageComponent }
 ];
 
 @NgModule({

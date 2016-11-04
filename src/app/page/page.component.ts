@@ -12,14 +12,14 @@ export class PageComponent implements OnInit {
 	public  title:string = 'sample page';
 	private project_id:number;
 	private user_id:number;
-	private page_id:number;
+	private page_idx:number;
 	
 
 	constructor(private route: ActivatedRoute){
 		route.params.subscribe( params => {
 			this.project_id = params['project_id'];
 			this.user_id 	= params['user_id'];
-			this.page_id 	= params['page_id'];
+			this.page_idx 	= params['page_idx'];
 		});
 	}
 	
