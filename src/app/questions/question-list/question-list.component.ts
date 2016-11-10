@@ -16,7 +16,7 @@ window['factories'] = {};
   selector: 'question-list',
   templateUrl: './question-list.component.html',
   styleUrls: ['./question-list.component.css'],
-  inputs: ['project_id', 'user_id', 'page_idx'],
+  inputs: ['project_id', 'user_id', 'page_idx', 'appSubject'],
   entryComponents: [
   	CheckboxQuestionComponent,
   	RatingQuestionComponent,
@@ -26,14 +26,19 @@ window['factories'] = {};
 export class QuestionListComponent {
 	public  dev = false;
 	public  questions:any;
-	public  page_idx:number;
 	private componentRefs;
+	private questionsAnswered = 0;
+
+	public  page_idx:number;
+	public  appSubject:any;
 
 	constructor(
 		private qss: QuestionListService,
 		private viewContainer: ViewContainerRef, 
 		private componentFactoryResolver:ComponentFactoryResolver
-	){}
+	){
+		console.log('QuestionListComponent:constructor');
+	}
 	
 	ngAfterContentInit(){
 		this.qss.setQuestionsForPage(this.page_idx);
@@ -41,6 +46,23 @@ export class QuestionListComponent {
 		
 		this.createQuestionFactories();
 		this.componentRefs = this.projectQuestionComponents(this.questions);
+
+		this.appSubject.subscribe(action => {
+			if(action === 'question:selection:made') {
+				this.questionsAnswered = this.questionsAnswered + 1;
+				this.dispatchQuestionSelection();
+			}
+		},
+		err => {});
+	}
+
+	dispatchQuestionSelection(){
+		let allQuestionsAnswered = this.haveAllQuestionsBeenAnswered();
+		if(allQuestionsAnswered) return this.appSubject.next('page:advance');
+	}
+
+	haveAllQuestionsBeenAnswered(){
+		return (this.questionsAnswered === this.questions.length); 
 	}
 
 	createQuestionFactories(){
@@ -57,9 +79,11 @@ export class QuestionListComponent {
 		questions.forEach(question => {
 			let type  			 = question.type;
 			let name 			 = type[0].toUpperCase() + type.substring(1) + 'QuestionFactory';
+			var component 		 = this.viewContainer.createComponent(window['factories'][name]);
 
-			//2) Create a ComponentRef window['that'].viewContainer.createComponent(componentFactory);
-			_questionComponents.push(this.viewContainer.createComponent(window['factories'][name]));
+			component.instance['appSubject'] = window['that'].appSubject;
+
+			_questionComponents.push(component);
 		});
 
 		return _questionComponents;

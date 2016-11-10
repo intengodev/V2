@@ -14,7 +14,7 @@ export class QuestionListService {
 	* Fetches By Page Order, not by page id
 	*/
 	setQuestionsForPage(page_idx){
-		this.tmp.questionKeysForPage = mocks.pages[page_idx].questions;
+		this.tmp.questionKeysForPage = (typeof mocks.pages[page_idx] !== 'undefined') ? mocks.pages[page_idx].questions : '';
 		this.tmp.questionsForPage 	= [];
 		
 		mocks.questions.forEach( question => {

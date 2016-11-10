@@ -1,12 +1,13 @@
 
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule }      from '@angular/core';
-import { FormsModule }   from '@angular/forms';
-import { HttpModule }    from '@angular/http';
-import { RouterModule, 
-         Routes }        from '@angular/router';
-import { LocationStrategy, HashLocationStrategy } from '@angular/common';
+import { BrowserModule }              from '@angular/platform-browser';
+import { NgModule }                   from '@angular/core';
+import { FormsModule }                from '@angular/forms';
+import { HttpModule }                 from '@angular/http';
 
+import { LocationStrategy, 
+         HashLocationStrategy }       from '@angular/common';
+
+import { AppService }                 from './app.service';
 import { AppComponent }               from './app.component';
 import { ProgressBarComponent }       from './progress-bar/progress-bar.component';
 
@@ -21,11 +22,8 @@ import { QuestionListService }        from './questions/question-list/question-l
 import { RatingQuestionComponent }    from './questions/rating-question/rating-question.component';
 import { MatrixQuestionComponent }    from './questions/matrix-question/matrix-question.component';
 
-const routes: Routes =[
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
-  { path: 'home', component: PageComponent },
-  { path: ':project_id/:user_id/:page_idx', component: PageComponent }
-];
+
+import { AppRoutingModule }           from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -44,10 +42,11 @@ const routes: Routes =[
     BrowserModule,
     FormsModule,
     HttpModule,
-    RouterModule.forRoot(routes)
+    AppRoutingModule
   ],
   providers: [
     QuestionListService,
+    AppService,
     { provide : LocationStrategy , useClass : HashLocationStrategy },
   ],
   bootstrap: [AppComponent]

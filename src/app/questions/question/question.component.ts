@@ -5,26 +5,26 @@ import { BehaviorSubject } 	 from 'rxjs/BehaviorSubject';
 @Component({
   selector: 'app-question',
   templateUrl: './question.component.html',
-  styleUrls: ['./question.component.css']
+  styleUrls: ['./question.component.css'],
+  inputs: ['AppSubject']
 })
-export class QuestionComponent implements OnInit {
+export class QuestionComponent {
   private blinked = 0;
   private hightlightState = 0;
   private blinkInterval;
   private blinkRate;
   private selectionSubject = new BehaviorSubject(null);
 
-  constructor(){}
-  ngOnInit(){}
+  ngAfterContentInit(){}
 
   /*
   * Highlights the selection and does the nice blinking effect
   * returns a BehaviorSubject
   */
   toggleSelection(target, blinkRate, animationSpeed):any{
-  	console.log('parent toggle selection');
+  	// console.log('parent toggle selection');
 
-  	this.clearOptionSelections(document.querySelectorAll('.matrix-options .option'));
+  	this.clearOptionSelections(document.querySelectorAll('.question-options .option'));
 
   	window['that'] = this;
   	this.blinkRate = blinkRate;

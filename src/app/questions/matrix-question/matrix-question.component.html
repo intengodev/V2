@@ -24,7 +24,7 @@
 		</a>
 	</div>
 
-	<ul class="matrix-options">
+	<ul class="question-options">
 		<li *ngFor="let option of options; let i = index;" class="option" id="option-{{i}}" (click)="toggleChildSelection($event.target, 7, 100)">
 			{{ option.text }}
 		</li>

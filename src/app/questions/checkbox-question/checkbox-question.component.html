@@ -1,7 +1,7 @@
 
 <div class="ui form checkbox-question">
   <ul class="question-options">
-    <li id="question-{{i}}" class="question" *ngFor="let question of questions; let i = index;" [class.current]="i == currentPager">
+    <li id="question-{{i}}" class="question option" *ngFor="let question of questions; let i = index;" [class.current]="i == currentPager" (click)="toggleChildSelection($event.target, 5, 100)">
       {{ question.text }}
     </li>
   </ul>
