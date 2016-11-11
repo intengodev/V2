@@ -47,8 +47,10 @@ export class QuestionListComponent {
 		this.createQuestionFactories();
 		this.componentRefs = this.projectQuestionComponents(this.questions);
 
-		this.appSubject.subscribe(action => {
-			if(action === 'question:selection:made') {
+		this.appSubject.subscribe(dto => {
+			console.log('QuestionListComponent:ngAfterContentInit', dto);
+
+			if(dto.action === 'question:selection:made') {
 				this.questionsAnswered = this.questionsAnswered + 1;
 				this.dispatchQuestionSelection();
 			}
@@ -58,7 +60,9 @@ export class QuestionListComponent {
 
 	dispatchQuestionSelection(){
 		let allQuestionsAnswered = this.haveAllQuestionsBeenAnswered();
-		if(allQuestionsAnswered) return this.appSubject.next('page:advance');
+		if(allQuestionsAnswered) return this.appSubject.next({
+			action: 'page:advance'
+		});
 	}
 
 	haveAllQuestionsBeenAnswered(){

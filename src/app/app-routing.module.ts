@@ -22,4 +22,6 @@ const routes: Routes =[
     RouterModule
   ]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule {
+  //this.router.navigate(['/', pid, this.user_id, nextPage]);
+}

@@ -6,7 +6,7 @@ import { QuestionComponent } from '../question/question.component';
   selector: 'checkbox-question',
   templateUrl: './checkbox-question.component.html',
   styleUrls: ['./checkbox-question.component.css'],
-  inputs: ['AppSubject']
+  inputs: ['appSubject']
 })
 export class CheckboxQuestionComponent extends QuestionComponent {
 	public questions:any  = [
@@ -27,17 +27,15 @@ export class CheckboxQuestionComponent extends QuestionComponent {
 	toggleChildSelection(target, blinkRate, animationSpeed):any{
 	  	var selectionSubject = this.toggleSelection(target, blinkRate, animationSpeed);
 	  	selectionSubject.subscribe(resp => {
-	  		console.log('incrementing');
+	  		//console.log('incrementing');
 	  	},
 	  	err => {
 	  		console.log('error: ', err)
 	  	},
 	  	() => {
-	  		/*
-	  			Emit an question:selection:made event that the question-list component listens for
-	  			to see if all questions have been completed on the page.
-	  		*/
-	  		this['AppSubject'].next('question:selection:made');
+	  		this['appSubject'].next({
+	  			action: 'question:selection:made'
+	  		});
 	  	});
 
 	  	return false;
