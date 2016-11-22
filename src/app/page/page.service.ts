@@ -12,11 +12,10 @@ export class PageService {
   private project_id;
   private user_id;
   private page_idx;
-  private _route:any;
 
   constructor(public route: ActivatedRoute, public router: Router){
 		console.log('PageService:contructor');
-  	this._route = window['route'] = route;
+  	window['route'] = route;
 
   	this.delegateEvents();
   }

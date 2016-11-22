@@ -2,7 +2,6 @@
 import { Component, OnInit } 		from '@angular/core';
 import { QuestionListComponent }  	from '../questions/question-list/question-list.component';
 
-import { BehaviorSubject }  		from 'rxjs/BehaviorSubject';
 import 'rxjs/add/operator/filter';
 
 import { ActivatedRoute, Router}	from '@angular/router';
@@ -27,15 +26,15 @@ export class PageComponent {
 
 	private animationSpeed = 200;
 
-	public  appSubject:any;
+	public  pageSubject:any;
 	public  currentState 		= 'dormant';
 	public  subscription;
 	
 	constructor(private route: ActivatedRoute, private router: Router, private pageService: PageService){
 		console.log('PageComponent:constructor');
 		
-		this.appSubject = pageService.getPageSubject();
-		window['AppSubject'] = this.appSubject;
+		this.pageSubject = pageService.getPageSubject();
+		window['AppSubject'] = this.pageSubject;
 	}
  	
 	ngOnInit(){
@@ -49,7 +48,10 @@ export class PageComponent {
 		
 		this.listenForEvents();
 	}
-
+	
+	/**
+	 * Listens for route and page changes
+	 *  */
 	listenForEvents(){
 		this.subscription = this.route.params.subscribe( params => {
 			console.log('PageComponent:route params subscribe', params);
@@ -57,7 +59,8 @@ export class PageComponent {
 			this.pageService.setParamsFromRouter(params);
 		});
 		
-		this.appSubject.filter( dto => {
+		//Filter only page events
+		this.pageSubject.filter( dto => {
 			if(typeof dto.action !== 'undefined') return (dto.action.indexOf("page") > -1);
 		})
 		.subscribe( dto => this.delegatePageEvents(dto));
@@ -80,11 +83,11 @@ export class PageComponent {
 	}
 
 	transitionOut(dto){
-		console.log('PageComponent:transitionOut');
 		this.currentState = 'transitioningOut';
 		document.querySelectorAll('.page')[0].classList.add(this.currentState);
 	}
-
+	
+	//TODO: Remove these timeouts in favor of an angular 2 animation strategy
 	resetPageState(dto){
 		window.setTimeout(() => {
 			console.log('Page:resetPageState', dto);
@@ -92,8 +95,6 @@ export class PageComponent {
 			this.currentState = 'dormant';
 			node.classList.remove('active', 'transitioningOut');
 			
-			//Reset all questions
-
 		}, this.animationSpeed + 150);
 	}
 
