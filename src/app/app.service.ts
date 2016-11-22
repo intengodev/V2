@@ -15,6 +15,7 @@ export class AppService {
   private _route:any;
 
   constructor(public route: ActivatedRoute, public router: Router){
+	console.log('AppService:contructor');
   	this._route = window['route'] = route;
 
   	this.listenForRouteChanges(route);
@@ -29,6 +30,8 @@ export class AppService {
   }
 
   setParamsFromRouter(params){
+	console.log('AppService:setParamsFromRouter', params);
+
 	this.project_id = params['project_id'];
 	this.user_id 	= params['user_id'];
 	this.page_idx 	= params['page_idx'];
@@ -36,6 +39,7 @@ export class AppService {
 
   delegateEvents(){
   	self = this;
+	console.log('AppService delegating events: ');
 
   	this.appSubject.subscribe( dto => {
 		console.log('AppService:AppSubject:next', dto);
@@ -49,29 +53,17 @@ export class AppService {
   }
 
   advancePage(){
-  	console.log('AppService:advancePage');
-  	
-  	this.transitionPageOut(this.page_idx);
-  	this.removeCurrentPage(this.page_idx);
-  	this.createPage(this.page_idx + 1);
-  	this.transitionPageIn(this.page_idx + 1);
-  }
+	let oldPageIdx = this.page_idx;
+  	let newPageIdx = this.page_idx + 1;
 
-  removeCurrentPage(oldPageIdx){
-  	this.appSubject.next({
-  		action: 'page:remove',
-  		idx: oldPageIdx
-  	});
-  }
+	console.log('AppService:advancePage oldPageIdx / newPageIdx: ', oldPageIdx, newPageIdx);
 
-  createPage(newPageIdx){
-  	this.appSubject.next({
-  		action: 'page:create',
-  		idx: newPageIdx
-  	});
+  	this.transitionPageOut(oldPageIdx);
+  	this.transitionPageIn(newPageIdx);
   }
 
   transitionPageOut(oldPageIdx){
+	console.log('AppService:transitionPageOut');
   	this.appSubject.next({
   		action: 'page:transition:out',
   		idx: oldPageIdx

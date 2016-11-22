@@ -3,12 +3,15 @@ import { Component, ViewChild,
 		 ViewContainerRef, 
 		 ComponentFactoryResolver }   from '@angular/core';
 
+import { ActivatedRoute }			  from '@angular/router';
+
 import { QuestionComponent }		  from '../question/question.component';
 import { CheckboxQuestionComponent }  from '../checkbox-question/checkbox-question.component';
 import { RatingQuestionComponent }    from '../rating-question/rating-question.component';
 import { MatrixQuestionComponent }    from '../matrix-question/matrix-question.component';
 
 import { QuestionListService }		  from './question-list-service';
+import { AppService } 	 			  from './../../app.service';
 
 window['factories'] = {};
 
@@ -28,25 +31,31 @@ export class QuestionListComponent {
 	public  questions:any;
 	private componentRefs;
 	private questionsAnswered = 0;
-
+	private routesSubscription;
 	public  page_idx:number;
 	public  appSubject:any;
 
 	constructor(
 		private qss: QuestionListService,
 		private viewContainer: ViewContainerRef, 
-		private componentFactoryResolver:ComponentFactoryResolver
+		private componentFactoryResolver:ComponentFactoryResolver,
+		public appService: AppService,
+		private route: ActivatedRoute
 	){
 		console.log('QuestionListComponent:constructor');
+		this.appSubject = this.appService.getAppSubject();
 	}
 	
 	ngAfterContentInit(){
-		this.qss.setQuestionsForPage(this.page_idx);
-		this.questions 			= this.qss.getQuestionsForPage(this.page_idx);
-		
+		console.log('questions initially: ', this.questions);
+
+		this.listenForEvents();
+
 		this.createQuestionFactories();
 		this.componentRefs = this.projectQuestionComponents(this.questions);
+	}
 
+	listenForEvents(){
 		this.appSubject.subscribe(dto => {
 			console.log('QuestionListComponent:ngAfterContentInit', dto);
 
@@ -56,6 +65,13 @@ export class QuestionListComponent {
 			}
 		},
 		err => {});
+
+		this.routesSubscription = this.route.params.subscribe( params => {
+			console.log('QuestionListService route subscribe', params);
+			this.qss.setQuestionsForPage(params['page_idx']);
+			this.questions = this.qss.getQuestionsForPage(params['page_idx']);
+			console.log('questions now: ', this.questions);
+		});
 	}
 
 	dispatchQuestionSelection(){
@@ -79,13 +95,17 @@ export class QuestionListComponent {
 	projectQuestionComponents(questions){
 		window['that'] = this;
 		var _questionComponents = [];
-		
-		questions.forEach(question => {
+		console.log('questions: ', questions);
+		let _questions = (typeof questions !== 'undefined') ? questions : [];
+		_questions.forEach((question, idx) => {
 			let type  			 = question.type;
 			let name 			 = type[0].toUpperCase() + type.substring(1) + 'QuestionFactory';
 			var component 		 = this.viewContainer.createComponent(window['factories'][name]);
-
-			component.instance['appSubject'] = window['that'].appSubject;
+			
+			//Set some attributes on the component instance
+			component.instance['appSubject'] 		= window['that'].appSubject;
+			component.instance['name'] 				= window['that'].questions[idx].name;
+			component.instance['questionOptions'] 	= window['that'].questions[idx].items;			
 
 			_questionComponents.push(component);
 		});

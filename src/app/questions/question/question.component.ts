@@ -22,7 +22,7 @@ export class QuestionComponent {
   * returns a BehaviorSubject
   */
   toggleSelection(target, blinkRate, animationSpeed):any{
-  	// console.log('parent toggle selection');
+  	console.log('parent toggle selection');
 
   	this.clearOptionSelections(document.querySelectorAll('.question-options .option'));
 
