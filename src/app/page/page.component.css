@@ -3,9 +3,19 @@
 	position: absolute;
     height: 100%;
     width: 100%;
+	left: 200%;
+}
+
+:host.active {
+	left: 0;
 }
 
 :host.transitioningOut {
 	transform: translateX(-150%);
+	transition: transform 200ms ease-in-out;
+}
+
+:host.transitioningIn {
+	transform: translateX(-200%);
 	transition: transform 200ms ease-in-out;
 }

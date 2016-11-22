@@ -59,6 +59,7 @@ export class AppService {
 	console.log('AppService:advancePage oldPageIdx / newPageIdx: ', oldPageIdx, newPageIdx);
 
   	this.transitionPageOut(oldPageIdx);
+	this.resetPage(oldPageIdx);
   	this.transitionPageIn(newPageIdx);
   }
 
@@ -66,6 +67,14 @@ export class AppService {
 	console.log('AppService:transitionPageOut');
   	this.appSubject.next({
   		action: 'page:transition:out',
+  		idx: oldPageIdx
+  	});
+  }
+
+  resetPage(oldPageIdx){
+	console.log('AppService:resetPage');
+  	this.appSubject.next({
+  		action: 'page:reset',
   		idx: oldPageIdx
   	});
   }

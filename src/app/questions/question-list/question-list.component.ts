@@ -48,11 +48,10 @@ export class QuestionListComponent {
 	
 	ngAfterContentInit(){
 		console.log('questions initially: ', this.questions);
+			
+		this.createQuestionFactories();
 
 		this.listenForEvents();
-
-		this.createQuestionFactories();
-		this.componentRefs = this.projectQuestionComponents(this.questions);
 	}
 
 	listenForEvents(){
@@ -68,12 +67,18 @@ export class QuestionListComponent {
 
 		this.routesSubscription = this.route.params.subscribe( params => {
 			console.log('QuestionListService route subscribe', params);
+			
+			this.qss.clearQuestionList(this.componentRefs);
+			this.questionsAnswered = 0;
+			
 			this.qss.setQuestionsForPage(params['page_idx']);
 			this.questions = this.qss.getQuestionsForPage(params['page_idx']);
-			console.log('questions now: ', this.questions);
+
+			
+			this.componentRefs = this.projectQuestionComponents(this.questions);
 		});
 	}
-
+	
 	dispatchQuestionSelection(){
 		let allQuestionsAnswered = this.haveAllQuestionsBeenAnswered();
 		if(allQuestionsAnswered) return this.appSubject.next({

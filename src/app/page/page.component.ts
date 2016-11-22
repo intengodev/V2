@@ -15,15 +15,17 @@ window['mocks'] = new Mocks;
 
 @Component({
   selector: 'page',
-  host: { 'class': 'page' },
+  host: { 'class': 'page active' },
   templateUrl: './page.component.html',
   styleUrls: ['./page.component.css']
 })
 export class PageComponent {
-	public  title:string;
+	public  title:string = '';
 	private project_id:number; 
 	private user_id:number;
 	private page_idx:any;
+
+	private animationSpeed = 200;
 
 	public  appSubject:any;
 	private route:any;
@@ -44,8 +46,8 @@ export class PageComponent {
 		this.project_id = params['project_id'];
 		this.user_id    = params['user_id'];
 		this.page_idx   = params['page_idx'];
-
-		this.title 		= window['mocks'].pages[this.page_idx].title
+		
+		if(typeof this.page_idx !== 'undefined') this.title 		= window['mocks'].pages[this.page_idx].title;
 		
 		this.listenForEvents();
 	}
@@ -53,23 +55,30 @@ export class PageComponent {
 	listenForEvents(){
 		this.subscription = this.route.params.subscribe( params => {
 			console.log('PageComponent:route params subscribe', params);
+			this.refreshPageData(params);
 			this.appService.setParamsFromRouter(params);
 		});
 		
 		this.appSubject.filter( dto => {
-			if(typeof dto.action !== 'undefined') return dto.action.indexOf("page") > -1
+			if(typeof dto.action !== 'undefined') return (dto.action.indexOf("page") > -1);
 		})
 		.subscribe( dto => this.delegatePageEvents(dto));
 	}
 
- 	ngOnDestroy () {
-		 this.subscription.unsubscribe();
-	 }
+	refreshPageData(props){
+		this.project_id = props['project_id'];
+		this.page_idx = props['user_id'];
+		this.page_idx = props['page_idx'];
+
+		if(typeof this.page_idx !== 'undefined') this.title 		= window['mocks'].pages[this.page_idx].title;
+	}
 	
 	delegatePageEvents(dto){
 		console.log('PageComponent:delegatePageEvents', dto.action);
-		if(dto.action == "page:transition:out") this.transitionOut(dto)
-		if(dto.action == "page:transition:in") this.transitionIn(dto)
+
+		if(dto.action == "page:transition:out") this.transitionOut(dto);
+		if(dto.action == "page:reset") this.resetPageState(dto);
+		if(dto.action == "page:transition:in") this.transitionIn(dto);
 	}
 
 	transitionOut(dto){
@@ -78,9 +87,38 @@ export class PageComponent {
 		document.querySelectorAll('.page')[0].classList.add(this.currentState);
 	}
 
-	transitionIn(dto){
-		let nextPageIdx = Number(this.page_idx) + 1;
-		console.log('PageComponent:transitionIn', nextPageIdx, dto);
-		this.router.navigate(['/', this.project_id, this.user_id, nextPageIdx]);
+	resetPageState(dto){
+		window.setTimeout(() => {
+			console.log('Page:resetPageState', dto);
+			let node = document.querySelectorAll('.page.active')[0];
+			this.currentState = 'dormant';
+			node.classList.remove('active', 'transitioningOut');
+			
+			//Reset all questions
+
+		}, this.animationSpeed + 150);
 	}
+
+	transitionIn(dto){
+		window.setTimeout(() => {
+			let nextPageIdx = Number(this.page_idx) + 1;
+			let node = document.querySelectorAll('.page')[0];
+			console.log('PageComponent:transitionIn', nextPageIdx, dto);
+
+			this.router.navigate(['/', this.project_id, this.user_id, nextPageIdx]);
+			
+			this.currentState = 'transitioningIn';
+			node.classList.add(this.currentState);
+
+			window.setTimeout(() => {
+				this.currentState = 'active';
+				node.classList.add(this.currentState);
+				node.classList.remove('transitioningIn');
+			}, this.animationSpeed);
+		}, this.animationSpeed + 250);
+	}
+
+	ngOnDestroy () {
+		 this.subscription.unsubscribe();
+	 }
 }
