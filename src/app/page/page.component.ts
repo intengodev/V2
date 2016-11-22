@@ -8,7 +8,7 @@ import 'rxjs/add/operator/filter';
 import { ActivatedRoute, Router}	from '@angular/router';
 
 import { AppRoutingModule }         from './../app-routing.module';
-import { AppService } 	 			from './../app.service';
+import { PageService } 	 			from './page.service';
 
 import { Mocks } 					from '../mocks';
 window['mocks'] = new Mocks;
@@ -28,15 +28,13 @@ export class PageComponent {
 	private animationSpeed = 200;
 
 	public  appSubject:any;
-	private route:any;
 	public  currentState 		= 'dormant';
 	public  subscription;
 	
-	constructor(private _route: ActivatedRoute, private router: Router, private appService: AppService){
+	constructor(private route: ActivatedRoute, private router: Router, private pageService: PageService){
 		console.log('PageComponent:constructor');
-		this.route = _route;
 		
-		this.appSubject = appService.getAppSubject();
+		this.appSubject = pageService.getPageSubject();
 		window['AppSubject'] = this.appSubject;
 	}
  	
@@ -56,7 +54,7 @@ export class PageComponent {
 		this.subscription = this.route.params.subscribe( params => {
 			console.log('PageComponent:route params subscribe', params);
 			this.refreshPageData(params);
-			this.appService.setParamsFromRouter(params);
+			this.pageService.setParamsFromRouter(params);
 		});
 		
 		this.appSubject.filter( dto => {
@@ -67,8 +65,8 @@ export class PageComponent {
 
 	refreshPageData(props){
 		this.project_id = props['project_id'];
-		this.page_idx = props['user_id'];
-		this.page_idx = props['page_idx'];
+		this.user_id 	= props['user_id'];
+		this.page_idx 	= props['page_idx'];
 
 		if(typeof this.page_idx !== 'undefined') this.title 		= window['mocks'].pages[this.page_idx].title;
 	}

@@ -1,16 +1,20 @@
 
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import { QuestionComponent } from '../question/question.component';
+import { PageService }		 from './../../page/page.service';
 
 @Component({
   selector: 'checkbox-question',
   templateUrl: './checkbox-question.component.html',
-  styleUrls: ['./checkbox-question.component.css'],
-  inputs: ['appSubject']
+  styleUrls: ['./checkbox-question.component.css']
 })
 export class CheckboxQuestionComponent extends QuestionComponent {
 	public questionOptions:any;
 	public name;
+	
+	constructor(public pageService: PageService){
+	  super(pageService);
+  	}
 
 	toggleChildSelection(target, blinkRate, animationSpeed):any{
 	  	var selectionSubject = this.toggleSelection(target, blinkRate, animationSpeed);
@@ -21,7 +25,7 @@ export class CheckboxQuestionComponent extends QuestionComponent {
 	  		console.log('error: ', err)
 	  	},
 	  	() => {
-	  		this['appSubject'].next({
+	  		this['pageSubject'].next({
 	  			action: 'question:selection:made'
 	  		});
 	  	});

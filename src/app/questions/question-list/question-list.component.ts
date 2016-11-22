@@ -11,7 +11,7 @@ import { RatingQuestionComponent }    from '../rating-question/rating-question.c
 import { MatrixQuestionComponent }    from '../matrix-question/matrix-question.component';
 
 import { QuestionListService }		  from './question-list-service';
-import { AppService } 	 			  from './../../app.service';
+import { PageService } 	 			  from './../../page/page.service';
 
 window['factories'] = {};
 
@@ -33,17 +33,17 @@ export class QuestionListComponent {
 	private questionsAnswered = 0;
 	private routesSubscription;
 	public  page_idx:number;
-	public  appSubject:any;
+	public  pageSubject:any;
 
 	constructor(
 		private qss: QuestionListService,
 		private viewContainer: ViewContainerRef, 
 		private componentFactoryResolver:ComponentFactoryResolver,
-		public appService: AppService,
+		public pageService: PageService,
 		private route: ActivatedRoute
 	){
 		console.log('QuestionListComponent:constructor');
-		this.appSubject = this.appService.getAppSubject();
+		this.pageSubject = this.pageService.getPageSubject();
 	}
 	
 	ngAfterContentInit(){
@@ -55,7 +55,7 @@ export class QuestionListComponent {
 	}
 
 	listenForEvents(){
-		this.appSubject.subscribe(dto => {
+		this.pageSubject.subscribe(dto => {
 			console.log('QuestionListComponent:ngAfterContentInit', dto);
 
 			if(dto.action === 'question:selection:made') {
@@ -81,7 +81,7 @@ export class QuestionListComponent {
 	
 	dispatchQuestionSelection(){
 		let allQuestionsAnswered = this.haveAllQuestionsBeenAnswered();
-		if(allQuestionsAnswered) return this.appSubject.next({
+		if(allQuestionsAnswered) return this.pageSubject.next({
 			action: 'page:advance'
 		});
 	}

@@ -7,7 +7,7 @@ import { HttpModule }                 from '@angular/http';
 import { LocationStrategy, 
          HashLocationStrategy }       from '@angular/common';
 
-import { AppService }                 from './app.service';
+import { PageService }                 from './page/page.service';
 import { AppComponent }               from './app.component';
 import { ProgressBarComponent }       from './progress-bar/progress-bar.component';
 
@@ -46,7 +46,7 @@ import { AppRoutingModule }           from './app-routing.module';
   ],
   providers: [
     QuestionListService,
-    AppService,
+    PageService,
     { provide : LocationStrategy , useClass : HashLocationStrategy },
   ],
   bootstrap: [AppComponent]

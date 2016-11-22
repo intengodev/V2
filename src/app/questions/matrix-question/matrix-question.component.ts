@@ -1,6 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { QuestionComponent } from '../question/question.component';
+import { PageService }		 from './../../page/page.service';
 
 @Component({
   selector: 'matrix-question',
@@ -39,8 +40,8 @@ export class MatrixQuestionComponent extends QuestionComponent {
 	  }
 	];
 
-  constructor(){
-  	super();
+  constructor(public pageService: PageService){
+  	super(pageService);
   	this.questionCount = this.questions.length;
   }
 

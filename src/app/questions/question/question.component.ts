@@ -1,12 +1,12 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } 	 from 'rxjs/BehaviorSubject';
+import { PageService }		 from './../../page/page.service';
 
 @Component({
   selector: 'app-question',
   templateUrl: './question.component.html',
-  styleUrls: ['./question.component.css'],
-  inputs: ['AppSubject']
+  styleUrls: ['./question.component.css']
 })
 export class QuestionComponent {
   private blinked = 0;
@@ -14,8 +14,11 @@ export class QuestionComponent {
   private blinkInterval;
   private blinkRate;
   private selectionSubject = new BehaviorSubject(null);
+  private pageSubject;
 
-  ngAfterContentInit(){}
+  constructor(public pageService: PageService){
+	  this.pageSubject = this.pageService.getPageSubject();
+  }
 
   /*
   * Highlights the selection and does the nice blinking effect
