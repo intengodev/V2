@@ -1,15 +1,15 @@
 
 import { Component, OnInit } 		from '@angular/core';
-import { QuestionListComponent }  	from '../questions/question-list/question-list.component';
+import { QuestionListComponent }  	from '../../questions/question-list/public/question-list.component';
 
 import 'rxjs/add/operator/filter';
 
 import { ActivatedRoute, Router}	from '@angular/router';
 
-import { AppRoutingModule }         from './../app-routing.module';
+import { AppRoutingModule }         from './../../app-routing.module';
 import { PageService } 	 			from './page.service';
 
-import { Mocks } 					from '../mocks';
+import { Mocks } 					from '../../mocks';
 window['mocks'] = new Mocks;
 
 @Component({
@@ -23,7 +23,7 @@ export class PageComponent {
 	private project_id:number; 
 	private user_id:number;
 	private page_idx:any;
-
+//test pc
 	private animationSpeed = 200;
 
 	public  pageSubject:any;

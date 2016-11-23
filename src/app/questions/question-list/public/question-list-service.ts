@@ -1,6 +1,6 @@
 
 import { Injectable } 		from '@angular/core';
-import { Mocks }	from '../../mocks';
+import { Mocks }			from '../../../mocks';
 
 let mocks = new Mocks;
 
@@ -10,7 +10,7 @@ export class QuestionListService {
 	public  questions = [];	
 	private tmp:any   = {};
 
-	/*
+	/* 
 	* Fetches By Page Order, not by page id
 	*/
 	setQuestionsForPage(page_idx){

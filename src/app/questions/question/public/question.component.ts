@@ -1,7 +1,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } 	 from 'rxjs/BehaviorSubject';
-import { PageService }		 from './../../page/page.service';
+import { PageService }		 from './../../../page/public/page.service';
 
 @Component({
   selector: 'app-question',

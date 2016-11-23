@@ -5,13 +5,13 @@ import { Component, ViewChild,
 
 import { ActivatedRoute }			  from '@angular/router';
 
-import { QuestionComponent }		  from '../question/question.component';
-import { CheckboxQuestionComponent }  from '../checkbox-question/checkbox-question.component';
-import { RatingQuestionComponent }    from '../rating-question/rating-question.component';
-import { MatrixQuestionComponent }    from '../matrix-question/matrix-question.component';
+import { QuestionComponent }		  from '../../question/public/question.component';
+import { CheckboxQuestionComponent }  from '../../checkbox-question/public/checkbox-question.component';
+import { RatingQuestionComponent }    from '../../rating-question/public/rating-question.component';
+import { MatrixQuestionComponent }    from '../../matrix-question/public/matrix-question.component';
 
 import { QuestionListService }		  from './question-list-service';
-import { PageService } 	 			  from './../../page/page.service';
+import { PageService } 	 			  from './../../../page/public/page.service';
 
 window['factories'] = {};
 

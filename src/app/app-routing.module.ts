@@ -1,10 +1,10 @@
 
 import { NgModule, Injectable } from '@angular/core';
 import { RouterModule, 
-         Routes }        		from '@angular/router';
+         Routes }        		    from '@angular/router';
 
-import { AppComponent } 		from './app.component';
-import { PageComponent } 		from './page/page.component';
+import { AppComponent } 		    from './app.component';
+import { PageComponent } 		    from './page/public/page.component';
 
 const routes: Routes =[
   { path: '', redirectTo: 'home', pathMatch: 'full' },

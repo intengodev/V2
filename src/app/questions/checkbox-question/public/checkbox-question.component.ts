@@ -1,7 +1,7 @@
 
 import { Component, Inject } from '@angular/core';
-import { QuestionComponent } from '../question/question.component';
-import { PageService }		 from './../../page/page.service';
+import { QuestionComponent } from '../../question/public/question.component';
+import { PageService }		 from './../../../page/public/page.service';
 
 @Component({
   selector: 'checkbox-question',

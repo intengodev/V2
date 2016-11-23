@@ -3,7 +3,7 @@ import { Injectable } 		from '@angular/core';
 import { BehaviorSubject }  from 'rxjs/BehaviorSubject';
 import { Router, RouterModule, 
 		 ActivatedRoute } 	from '@angular/router';
-
+ 
 var self;
 
 @Injectable()

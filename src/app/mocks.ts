@@ -49,6 +49,7 @@ let _questions = [
 			{text: 'Twice a day'}
 		]
 	}];
+
 let pages 	   = {
 	'1': {
 		_id: '012an231',
@@ -73,7 +74,22 @@ let pages 	   = {
 };
 
 
+
+// "project": {
+// 	"type": ['ideation', 'prediction_market', 'pairwise'] //suggestion only - ideation
+// 	"capabilities": {
+// 		"optimization_tool": [
+// 			{ project_id: 12, jwt: 'lkjhre' },
+// 			{ project_id: 12 }
+// 		],
+// 		"prediction_market": [],
+// 		"pairwise": []
+// 	}
+// };
+
+
 export class Mocks {
 	public questions = _questions;
 	public pages 	 = pages;
 }
+
