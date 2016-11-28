@@ -5,7 +5,7 @@ import { PageService }		 from './../../../page/public/page.service';
 
 @Component({
   selector: 'app-question',
-  templateUrl: './question.component.html',
+  template: './question.component.html',
   styleUrls: ['./question.component.css']
 })
 export class QuestionComponent {
@@ -13,13 +13,40 @@ export class QuestionComponent {
   private hightlightState = 0;
   private blinkInterval;
   private blinkRate;
-  private selectionSubject = new BehaviorSubject(null);
   private pageSubject;
 
   constructor(public pageService: PageService){
 	  this.pageSubject = this.pageService.getPageSubject();
   }
+  
 
+  /*
+  * Initiates the HTTP request to save the selection and delegates the 
+  * questionAnimation
+  */
+  makeSelection(child, target, blinkRate, animationSpeed):any {
+	this.toggleSelection(target, blinkRate, animationSpeed);
+	
+	let dto  = child.extractDtoFromTarget(target);
+	child.postData(dto).subscribe( resp => {
+			if(resp.status == 200){
+				console.log('question data posted and resp: ', resp);
+				this['pageSubject'].next({
+					action: 'question:selection:made',
+					data: resp
+				});
+			} else {
+				console.error('question data post faile: ', resp);
+			}
+		}, 
+		err => {
+			console.log('post error: ', err);
+		}, 
+		resp => {
+			console.log('post conclusion', resp);
+	});
+  }
+  
   /*
   * Highlights the selection and does the nice blinking effect
   * returns a BehaviorSubject
@@ -36,8 +63,6 @@ export class QuestionComponent {
   	this.blinkInterval = window.setInterval(function(){
   		window['that'].highlight(target);
   	}, animationSpeed);
-
-  	return this.selectionSubject;
   }
 
   clearOptionSelections(targets){
@@ -57,8 +82,7 @@ export class QuestionComponent {
 		this.blinked = 0;
 		this.hightlightState = 0;
 		delete this.blinkInterval;
-		this.selectionSubject.complete();
-
+		
 		return false;
 	}
 

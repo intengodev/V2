@@ -1,18 +1,19 @@
 
-var express             = require('express');
-var path                = require('path');
-var logger              = require('morgan');
-var cookieParser        = require('cookie-parser');
-var bodyParser          = require('body-parser');
+var express                     = require('express');
+var path                        = require('path');
+var logger                      = require('morgan');
+var cookieParser                = require('cookie-parser');
+var bodyParser                  = require('body-parser');
 
-var app                 = express();
+var app                         = express();
 
-var project_routes      = require(__dirname + '/src/app/project/server/routes');
-var pages_routes        = require(__dirname + '/src/app/page/server/routes');
-var question_routes     = require(__dirname + '/src/app/questions/question/server/routes');
-var response_routes     = require(__dirname + '/src/app/response/server/routes');
-var participant_routes  = require(__dirname + '/src/app/participant/server/routes');
-var user_routes         = require(__dirname + '/src/app/user/server/routes');
+var project_routes              = require(__dirname + '/src/app/project/server/routes');
+var pages_routes                = require(__dirname + '/src/app/page/server/routes');
+var response_routes             = require(__dirname + '/src/app/response/server/routes');
+var participant_routes          = require(__dirname + '/src/app/participant/server/routes');
+var user_routes                 = require(__dirname + '/src/app/user/server/routes');
+var question_routes             = require(__dirname + '/src/app/questions/question/server/routes');
+var checkbox_question_routes    = require(__dirname + '/src/app/questions/checkbox-question/server/routes');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -36,7 +37,10 @@ app.get('/api', function (req, res) {
 //Mount the routes
 app.use('/projects', project_routes);
 app.use('/pages', pages_routes);                //For writing to the file system
-app.use('/questions', question_routes);
+
+app.use('/api/questions', question_routes);
+app.use('/api/questions/checkbox', checkbox_question_routes);
+
 app.use('/responses', response_routes);
 app.use('/participants', participant_routes);
 app.use('/users', user_routes);

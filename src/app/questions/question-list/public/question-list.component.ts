@@ -32,6 +32,7 @@ export class QuestionListComponent {
 	private componentRefs;
 	private questionsAnswered = 0;
 	private routesSubscription;
+	public 	project_id:number;
 	public  page_idx:number;
 	public  pageSubject:any;
 
@@ -71,7 +72,7 @@ export class QuestionListComponent {
 			this.qss.clearQuestionList(this.componentRefs);
 			this.questionsAnswered = 0;
 			
-			this.qss.setQuestionsForPage(params['page_idx']);
+			this.qss.setQuestionsForPage(this.project_id, params['page_idx']);
 			this.questions = this.qss.getQuestionsForPage(params['page_idx']);
 
 			
