@@ -30,7 +30,6 @@ export class QuestionListService {
 	}
 
 	clearQuestionList(questionRefs){
-		console.log('questionRefs: ', questionRefs);
 		if(typeof questionRefs == 'undefined' || questionRefs.length == 0) return;
 		questionRefs.forEach( ref => {
 			ref.destroy();

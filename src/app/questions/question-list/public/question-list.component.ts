@@ -43,22 +43,16 @@ export class QuestionListComponent {
 		public pageService: PageService,
 		private route: ActivatedRoute
 	){
-		console.log('QuestionListComponent:constructor');
 		this.pageSubject = this.pageService.getPageSubject();
 	}
 	
-	ngAfterContentInit(){
-		console.log('questions initially: ', this.questions);
-			
+	ngAfterContentInit(){			
 		this.createQuestionFactories();
-
 		this.listenForEvents();
 	}
 
 	listenForEvents(){
 		this.pageSubject.subscribe(dto => {
-			console.log('QuestionListComponent:ngAfterContentInit', dto);
-
 			if(dto.action === 'question:selection:made') {
 				this.questionsAnswered = this.questionsAnswered + 1;
 				this.dispatchQuestionSelection();
@@ -68,6 +62,7 @@ export class QuestionListComponent {
 
 		this.routesSubscription = this.route.params.subscribe( params => {
 			console.log('QuestionListService route subscribe', params);
+			
 			if(typeof params['page_idx'] == 'undefined') return;
 			
 			this.qss.clearQuestionList(this.componentRefs);
@@ -77,16 +72,12 @@ export class QuestionListComponent {
 			resp => {
 				let questions  = resp.json();
 				this.qss.setQuestions(questions);
-				
-				console.log('questionsResp: ', questions);
-				
 				this.questions = questions;
 			}, 
 			err => {
 				console.error('error: ', err);
 			}, 
 			() => {
-				console.log('complete');
 				this.questions 		= this.qss.getQuestions();
 				this.componentRefs  = this.projectQuestionComponents(this.questions);
 			});
@@ -114,8 +105,8 @@ export class QuestionListComponent {
 	projectQuestionComponents(questions){
 		window['that'] = this;
 		var _questionComponents = [];
-		console.log('questions: ', questions);
 		let _questions = (typeof questions !== 'undefined') ? questions : [];
+
 		_questions.forEach((question, idx) => {
 			let type  			 = question.type;
 			let name 			 = type[0].toUpperCase() + type.substring(1) + 'QuestionFactory';

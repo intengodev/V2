@@ -14,9 +14,7 @@ export class PageService {
   private page_idx;
 
   constructor(public route: ActivatedRoute, public router: Router){
-		console.log('PageService:contructor');
   	window['route'] = route;
-
   	this.delegateEvents();
   }
 
@@ -30,23 +28,16 @@ export class PageService {
 
   delegateEvents(){
 		self = this;
-		console.log('PageService delegating events: ');
-
 		this.pageSubject.subscribe( dto => {
-			console.log('PageService:AppSubject:next', dto);
 			if(dto.action === 'page:advance') this.advancePage();
 		}, err => {
-			console.log('AppSubject:err', err);
-		}, () => {
-			//console.log('AppSubject:success');
-		});
+			console.log('pageSubject:err', err);
+		}, () => {});
   }
 
   advancePage(){
 		let oldPageIdx = this.page_idx;
 		let newPageIdx = this.page_idx + 1;
-
-		console.log('PageService:advancePage oldPageIdx / newPageIdx: ', oldPageIdx, newPageIdx);
 
 		this.transitionPageOut(oldPageIdx);
 		this.resetPage(oldPageIdx);
@@ -54,7 +45,6 @@ export class PageService {
   }
 
   transitionPageOut(oldPageIdx){
-		console.log('PageService:transitionPageOut');
   	this.pageSubject.next({
   		action: 'page:transition:out',
   		idx: oldPageIdx
@@ -62,7 +52,6 @@ export class PageService {
   }
 
   resetPage(oldPageIdx){
-		console.log('PageService:resetPage');
   	this.pageSubject.next({
   		action: 'page:reset',
   		idx: oldPageIdx

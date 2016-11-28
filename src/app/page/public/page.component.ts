@@ -23,18 +23,15 @@ export class PageComponent {
 	private project_id:number; 
 	private user_id:number;
 	private page_idx:any;
-//test pc
 	private animationSpeed = 200;
 
 	public  pageSubject:any;
 	public  currentState 		= 'dormant';
 	public  subscription;
 	
-	constructor(private route: ActivatedRoute, private router: Router, private pageService: PageService){
-		console.log('PageComponent:constructor');
-		
+	constructor(private route: ActivatedRoute, private router: Router, private pageService: PageService){		
 		this.pageSubject = pageService.getPageSubject();
-		window['AppSubject'] = this.pageSubject;
+		//window['AppSubject'] = this.pageSubject;
 	}
  	
 	ngOnInit(){
@@ -55,6 +52,7 @@ export class PageComponent {
 	listenForEvents(){
 		this.subscription = this.route.params.subscribe( params => {
 			console.log('PageComponent:route params subscribe', params);
+			
 			this.refreshPageData(params);
 			this.pageService.setParamsFromRouter(params);
 		});
