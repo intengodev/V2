@@ -68,15 +68,28 @@ export class QuestionListComponent {
 
 		this.routesSubscription = this.route.params.subscribe( params => {
 			console.log('QuestionListService route subscribe', params);
+			if(typeof params['page_idx'] == 'undefined') return;
 			
 			this.qss.clearQuestionList(this.componentRefs);
 			this.questionsAnswered = 0;
 			
-			this.qss.setQuestionsForPage(this.project_id, params['page_idx']);
-			this.questions = this.qss.getQuestionsForPage(params['page_idx']);
-
-			
-			this.componentRefs = this.projectQuestionComponents(this.questions);
+			this.qss.fetchQuestionsForPage(this.project_id, params['page_idx']).subscribe(
+			resp => {
+				let questions  = resp.json();
+				this.qss.setQuestions(questions);
+				
+				console.log('questionsResp: ', questions);
+				
+				this.questions = questions;
+			}, 
+			err => {
+				console.error('error: ', err);
+			}, 
+			() => {
+				console.log('complete');
+				this.questions 		= this.qss.getQuestions();
+				this.componentRefs  = this.projectQuestionComponents(this.questions);
+			});
 		});
 	}
 	

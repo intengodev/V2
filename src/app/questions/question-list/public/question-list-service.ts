@@ -9,7 +9,7 @@ let mocks = new Mocks;
 export class QuestionListService {
 	private questionsAnswered:number = 0;
 	public  questions = [];	
-	private endpoint  = './api/questions'
+	private endpoint  = 'http://localhost:8080/api/questions';
 	private tmp:any   = {};
 	
 	constructor(public http: Http){}
@@ -17,31 +17,15 @@ export class QuestionListService {
 	/* 
 	* Fetches By Page Order, not by page id
 	*/
-	setQuestionsForPage(project_id, page_idx){
-		console.log('QuestionListService:setQuestionsForPage: ', page_idx);
-
-		this.http.get(`${this.endpoint}/${project_id}/${page_idx}`).subscribe(
-		resp => {
-			console.log('resp: ', resp);
-		}, 
-		err => {
-			console.error('error: ', err);
-		}, 
-		() => {
-			console.log('complete');
-		});
-		this.tmp.questionKeysForPage = (typeof mocks.pages[page_idx] !== 'undefined') ? mocks.pages[page_idx].questions : '';
-		this.tmp.questionsForPage 	= [];
-
-		mocks.questions.forEach( question => {
-			if(this.tmp.questionKeysForPage.includes(question._id)) this.tmp.questionsForPage.push(question);
-		}, this);
-
-		this.questions = this.tmp.questionsForPage;
-		//rm tmp
+	fetchQuestionsForPage(project_id, page_idx){
+		return this.http.get(`${this.endpoint}/${project_id}/${page_idx}`);
 	}
 
-	getQuestionsForPage(page_idx){
+	setQuestions(questions){
+		this.questions = questions;
+	}
+
+	getQuestions(){
 		return this.questions;
 	}
 

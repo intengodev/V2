@@ -5,7 +5,8 @@ var logger                      = require('morgan');
 var cookieParser                = require('cookie-parser');
 var bodyParser                  = require('body-parser');
 
-var app                         = express();
+var app                         = express(); 
+var db                          = require(__dirname + '/config/dev/db');
 
 var project_routes              = require(__dirname + '/src/app/project/server/routes');
 var pages_routes                = require(__dirname + '/src/app/page/server/routes');
@@ -20,6 +21,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+//Enable CORS for testing. Maybe remove later.
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
+
 //Set statics
 app.use(express.static(__dirname + '/dist'));
 app.use(express.static(__dirname + '/src'));
@@ -30,9 +38,7 @@ app.get('/', function (req, res) {
 });
 
 //API Root
-app.get('/api', function (req, res) {
-    res.send('API Root');
-});
+app.get('/api', function (req, res) { res.send('API Root'); });
 
 //Mount the routes
 app.use('/projects', project_routes);
