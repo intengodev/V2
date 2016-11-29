@@ -71,7 +71,8 @@ export class PageComponent {
 
 	fetch(params){
 		this.pageService.fetchPagesData(params['project_id']).subscribe( page_resp => {
-			this.pageService.setPagesData(page_resp.json()); //cache the data in the service to avoid subsequent page calls
+			var data = page_resp.json();
+			this.pageService.setPagesData(data); //cache the data in the service to avoid subsequent page calls
 			this.refreshPageData(params, page_resp);
 		});
 	}
@@ -103,7 +104,6 @@ export class PageComponent {
 	//TODO: Remove these timeouts in favor of an angular 2 animation strategy
 	resetPageState(dto){
 		window.setTimeout(() => {
-			console.log('Page:resetPageState', dto);
 			let node = document.querySelectorAll('.page.active')[0];
 			this.currentState = 'dormant';
 			node.classList.remove('active', 'transitioningOut');
@@ -115,7 +115,6 @@ export class PageComponent {
 		window.setTimeout(() => {
 			let nextPageIdx = Number(this.page_idx) + 1;
 			let node = document.querySelectorAll('.page')[0];
-			console.log('PageComponent:transitionIn', nextPageIdx, dto);
 
 			this.router.navigate(['/', this.project_id, this.user_id, nextPageIdx]);
 			

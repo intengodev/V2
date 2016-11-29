@@ -30,7 +30,6 @@ export class QuestionComponent {
 	let dto  = child.extractDtoFromTarget(target);
 	child.postData(dto).subscribe( resp => {
 			if(resp.status == 200){
-				console.log('question data posted and resp: ', resp);
 				this['pageSubject'].next({
 					action: 'question:selection:made',
 					data: resp
@@ -43,7 +42,6 @@ export class QuestionComponent {
 			console.log('post error: ', err);
 		}, 
 		resp => {
-			console.log('post conclusion', resp);
 	});
   }
   

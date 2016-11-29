@@ -58,6 +58,35 @@ db.questions.insert([
 db.questions.remove({});
 
 db.questions.drop();
+
+db.pages.insert([{
+	_id: '012an231',
+	page_idx: 1,
+	project_id: 20,
+	'title': 'page 1 title',
+	'questions': ['asd123klh213h']
+},
+{
+	_id: '012an232',
+	page_idx: 2,
+	project_id: 20,
+	'title': 'page 2 title',
+	'questions': ['asd123klh213i']
+},
+{
+	_id: '012an233',
+	page_idx: 3,
+	project_id: 20,
+	'title': 'page 3 title',
+	'questions': ['asd123klh213j']
+},
+{
+	_id: '012an234',
+	page_idx: 4,
+	project_id: 20,
+	'title': 'page 4 title',
+	'questions': ['asd123klh213h2k']
+}]);
  */
 
 let _questions = [
