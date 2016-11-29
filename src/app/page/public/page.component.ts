@@ -9,9 +9,6 @@ import { ActivatedRoute, Router}	from '@angular/router';
 import { AppRoutingModule }         from './../../app-routing.module';
 import { PageService } 	 			from './page.service';
 
-import { Mocks } 					from '../../mocks';
-window['mocks'] = new Mocks;
-
 @Component({
   selector: 'page',
   host: { 'class': 'page active' },
@@ -29,9 +26,12 @@ export class PageComponent {
 	public  currentState 		= 'dormant';
 	public  subscription;
 	
-	constructor(private route: ActivatedRoute, private router: Router, private pageService: PageService){		
+	constructor(
+		private route: ActivatedRoute, 
+		private router: Router, 
+		private pageService: PageService
+	){		
 		this.pageSubject = pageService.getPageSubject();
-		//window['AppSubject'] = this.pageSubject;
 	}
  	
 	ngOnInit(){
@@ -41,8 +41,6 @@ export class PageComponent {
 		this.user_id    = params['user_id'];
 		this.page_idx   = params['page_idx'];
 		
-		if(typeof this.page_idx !== 'undefined') this.title 		= window['mocks'].pages[this.page_idx].title;
-		
 		this.listenForEvents();
 	}
 	
@@ -50,31 +48,48 @@ export class PageComponent {
 	 * Listens for route and page changes
 	 *  */
 	listenForEvents(){
-		this.subscription = this.route.params.subscribe( params => {
-			console.log('PageComponent:route params subscribe', params);
-			
-			this.refreshPageData(params);
-			this.pageService.setParamsFromRouter(params);
-		});
-		
-		//Filter only page events
+		this.subscription = this.route.params.subscribe( params => { this.updatePage(params); });
 		this.pageSubject.filter( dto => {
 			if(typeof dto.action !== 'undefined') return (dto.action.indexOf("page") > -1);
-		})
-		.subscribe( dto => this.delegatePageEvents(dto));
+		}).subscribe( dto => this.delegatePageEvents(dto));
+	}
+	
+	/**
+	 * Decides where to pull data from and updates the component data
+	 */
+	updatePage(params){
+		if(typeof params['page_idx'] === 'undefined') return;
+
+		var pages_data 		= this.pageService.getPagesData();
+		if(typeof pages_data !== 'undefined'){
+			let page_data	= this.pageService.getDataForPage(params['page_idx']);
+			this.refreshPageData(params, page_data);
+		} else {
+			this.fetch(params);
+		}
 	}
 
-	refreshPageData(props){
-		this.project_id = props['project_id'];
-		this.user_id 	= props['user_id'];
-		this.page_idx 	= props['page_idx'];
+	fetch(params){
+		this.pageService.fetchPagesData(params['project_id']).subscribe( page_resp => {
+			this.pageService.setPagesData(page_resp.json()); //cache the data in the service to avoid subsequent page calls
+			this.refreshPageData(params, page_resp);
+		});
+	}
+	
+	/**
+	 * Refresh the data in the page component
+	 */
+	refreshPageData(params, page_data){
+		this.pageService.setParamsFromRouter(params);
 
-		if(typeof this.page_idx !== 'undefined') this.title 		= window['mocks'].pages[this.page_idx].title;
+		this.project_id = params['project_id'];
+		this.user_id 	= params['user_id'];
+		this.page_idx 	= params['page_idx'];
+		
+		this.title 		= (typeof this.page_idx !== 'undefined') ? page_data.title : '';
 	}
 	
 	delegatePageEvents(dto){
-		console.log('PageComponent:delegatePageEvents', dto.action);
-
 		if(dto.action == "page:transition:out") this.transitionOut(dto);
 		if(dto.action == "page:reset") this.resetPageState(dto);
 		if(dto.action == "page:transition:in") this.transitionIn(dto);

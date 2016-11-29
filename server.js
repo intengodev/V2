@@ -41,15 +41,15 @@ app.get('/', function (req, res) {
 app.get('/api', function (req, res) { res.send('API Root'); });
 
 //Mount the routes
-app.use('/projects', project_routes);
-app.use('/pages', pages_routes);                //For writing to the file system
+app.use('/api/projects', project_routes);
+app.use('/api/pages', pages_routes);                //For writing to the file system
 
 app.use('/api/questions', question_routes);
 app.use('/api/questions/checkbox', checkbox_question_routes);
 
-app.use('/responses', response_routes);
-app.use('/participants', participant_routes);
-app.use('/users', user_routes);
+app.use('/api/responses', response_routes);
+app.use('/api/participants', participant_routes);
+app.use('/api/users', user_routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -60,9 +60,7 @@ export class QuestionListComponent {
 		},
 		err => {});
 
-		this.routesSubscription = this.route.params.subscribe( params => {
-			console.log('QuestionListService route subscribe', params);
-			
+		this.routesSubscription = this.route.params.subscribe( params => {			
 			if(typeof params['page_idx'] == 'undefined') return;
 			
 			this.qss.clearQuestionList(this.componentRefs);

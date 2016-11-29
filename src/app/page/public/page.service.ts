@@ -1,8 +1,10 @@
 
 import { Injectable } 		from '@angular/core';
+import { Http } 			from '@angular/http';
 import { BehaviorSubject }  from 'rxjs/BehaviorSubject';
 import { Router, RouterModule, 
 		 ActivatedRoute } 	from '@angular/router';
+
  
 var self;
 
@@ -12,19 +14,46 @@ export class PageService {
   private project_id;
   private user_id;
   private page_idx;
+  private endpoint = '/api/pages';
+  private page_data; 
 
-  constructor(public route: ActivatedRoute, public router: Router){
+  constructor(public route: ActivatedRoute, public router: Router, public http: Http){
   	window['route'] = route;
   	this.delegateEvents();
   }
 
   setParamsFromRouter(params){
-		console.log('PageService:setParamsFromRouter', params);
-
 		this.project_id = params['project_id'];
 		this.user_id 	= params['user_id'];
 		this.page_idx 	= params['page_idx'];
   }
+
+	setPagesData(data){
+		this.page_data = data;
+	}	
+
+  	getPagesData(){
+		return this.page_data;
+  	}
+	
+	/**
+	 * Fetches all pages data for project
+	 */
+  	fetchPagesData(project_id){
+		return this.http.get(`${this.endpoint}/${project_id}`);
+  	}
+	
+	/**
+	 * Get data for a page by index
+	 */
+	getDataForPage(page_idx){
+		let pageData;
+		this.page_data.forEach( page => {
+			if(page.page_idx == page_idx) pageData = page;
+		});
+
+		return pageData;
+	}
 
   delegateEvents(){
 		self = this;
