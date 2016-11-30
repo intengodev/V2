@@ -88,8 +88,6 @@ export class PageComponent {
 		this.page_idx 	= params['page_idx'];
 		
 		this.title 		= (typeof this.page_idx !== 'undefined') ? page_data.title : '';
-
-		console.log('emitting next: ');
 		this.pageSubject.next({
 			action: 'page:data:refreshed'
 		})

@@ -38,9 +38,7 @@ export class ProgressBarComponent {
 	
 	listenForEvents(){
 		this.route.params.subscribe( params => {
-			console.log('params are changing: ', params);
 			if(typeof this.current_page === "undefined" || this.current_page !== params['page_idx']){
-				console.log('updaing page idx');
 				this.current_page = params['page_idx'];
 				this.update(this.current_page, this['page_count']);
 			}
@@ -48,7 +46,6 @@ export class ProgressBarComponent {
 	}
 
   	initProgressBar(){
-		console.log('initProgressBar');
 		this.$progressRef = jQuery('#progress_bar');
   		this.$progressRef.progress({
 			duration : 200,
@@ -59,9 +56,7 @@ export class ProgressBarComponent {
 		this.$progressRef.progress('set progress', 0)
   	}
 
-	update(page_idx, pageCount){
-		console.log('update: ', page_idx, pageCount);
-		
+	update(page_idx, pageCount){		
 		this.progress = (page_idx / pageCount) * 100;
 		this.$progressRef.progress('increment', this.progress);
 	}
