@@ -49,17 +49,15 @@ export class QuestionComponent {
   * Highlights the selection and does the nice blinking effect
   * returns a BehaviorSubject
   */
-  toggleSelection(target, blinkRate, animationSpeed):any{
+  toggleSelection(target, blinkRate, animationSpeed):any {
   	console.log('parent toggle selection');
 
   	this.clearOptionSelections(document.querySelectorAll('.question-options .option'));
-
-  	window['that'] = this;
   	this.blinkRate = blinkRate;
   	this.highlight(target);
-
-  	this.blinkInterval = window.setInterval(function(){
-  		window['that'].highlight(target);
+	
+  	this.blinkInterval = window.setInterval(() => {
+  		this.highlight(target);
   	}, animationSpeed);
   }
 
@@ -70,7 +68,7 @@ export class QuestionComponent {
   }
 
   highlight(target){
-  	let toAdd:number 	 = (window['that'].hightlightState == 0) ? 1 : 0;
+  	let toAdd:number 	 = (this.hightlightState == 0) ? 1 : 0;
   	this.hightlightState = toAdd;
 
   	this.blinked = this.blinked + 1;

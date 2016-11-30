@@ -4,7 +4,7 @@ import { QuestionListComponent }  	from '../../questions/question-list/public/qu
 
 import 'rxjs/add/operator/filter';
 
-import { ActivatedRoute, Router}	from '@angular/router';
+import { ActivatedRoute, Router }	from '@angular/router';
 
 import { AppRoutingModule }         from './../../app-routing.module';
 import { PageService } 	 			from './page.service';
@@ -27,8 +27,8 @@ export class PageComponent {
 	public  subscription;
 	
 	constructor(
-		private route: ActivatedRoute, 
-		private router: Router, 
+		public route: ActivatedRoute, 
+		public router: Router, 
 		private pageService: PageService
 	){		
 		this.pageSubject = pageService.getPageSubject();
@@ -88,6 +88,11 @@ export class PageComponent {
 		this.page_idx 	= params['page_idx'];
 		
 		this.title 		= (typeof this.page_idx !== 'undefined') ? page_data.title : '';
+
+		console.log('emitting next: ');
+		this.pageSubject.next({
+			action: 'page:data:refreshed'
+		})
 	}
 	
 	delegatePageEvents(dto){

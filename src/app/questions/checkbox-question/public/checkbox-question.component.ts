@@ -25,8 +25,6 @@ export class CheckboxQuestionComponent extends QuestionComponent {
   	}
 	
 	extractDtoFromTarget(target){
-		console.log('CheckboxQuestionComponent:extractDtoFromTarget');
-		
 		let dto:any  = {};
 		dto.text 	 = target.innerHTML.trim(); 
 		dto.type 	 = 'checkbox';
@@ -34,8 +32,5 @@ export class CheckboxQuestionComponent extends QuestionComponent {
 		return dto;
 	}
 
-	postData(dto){
-		console.log('CheckboxQuestionComponent:postData');
-		return this.http.post(this.endpoint, dto);
-	}
+	postData(dto){ return this.http.post(this.endpoint, dto); }
 }

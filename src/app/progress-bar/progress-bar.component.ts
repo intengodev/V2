@@ -15,39 +15,40 @@ var self;
 export class ProgressBarComponent {
 	private pageSubject;
 	public progress:number = 0;
+	public current_page;
 	public page_count;
 	public $progressRef;
 
 	constructor(
-		private route: ActivatedRoute,  
+		public  route: ActivatedRoute,  
 		private pageService: PageService
 	){
-		console.log('progress bar constructor');
 		this.pageSubject = this.pageService.getPageSubject();
 	}
 	
-	ngOnInit(){
-		console.log('initing pgoress bar'); 
-	}
-	
   	ngAfterViewInit(){
-		this.listenForEvents();
-		this.page_count = this.pageService.getPageCount();
-
-		this.initProgressBar();
+		this.pageSubject.subscribe( dto => {
+			if(dto.action === "page:data:refreshed"){
+				this.page_count = this.pageService.getPageCount();
+				this.initProgressBar();
+				this.listenForEvents();
+			}
+		});
   	}
 	
 	listenForEvents(){
-		self = this;
-		this.pageSubject.subscribe( dto => {
-			if(dto.action == 'page:transition:in'){
-				let pageCount = this.pageService.getPageCount();
-				this.update(dto.idx, pageCount);
+		this.route.params.subscribe( params => {
+			console.log('params are changing: ', params);
+			if(typeof this.current_page === "undefined" || this.current_page !== params['page_idx']){
+				console.log('updaing page idx');
+				this.current_page = params['page_idx'];
+				this.update(this.current_page, this['page_count']);
 			}
 		});
 	}
 
   	initProgressBar(){
+		console.log('initProgressBar');
 		this.$progressRef = jQuery('#progress_bar');
   		this.$progressRef.progress({
 			duration : 200,
@@ -59,6 +60,8 @@ export class ProgressBarComponent {
   	}
 
 	update(page_idx, pageCount){
+		console.log('update: ', page_idx, pageCount);
+		
 		this.progress = (page_idx / pageCount) * 100;
 		this.$progressRef.progress('increment', this.progress);
 	}

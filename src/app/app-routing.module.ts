@@ -5,11 +5,18 @@ import { RouterModule,
 
 import { AppComponent } 		    from './app.component';
 import { PageComponent } 		    from './page/public/page.component';
+import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 
-const routes: Routes =[
+const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: PageComponent },
-  { path: ':project_id/:user_id/:page_idx', component: PageComponent }
+  { 
+    path: ':project_id/:user_id/:page_idx', component: PageComponent,
+    children: [
+      //{ path: '', redirectTo: 'progress', pathMatch: 'full'},
+      { path: '', component: ProgressBarComponent }
+    ]
+  }
 ];
 
 //http://localhost:4200/#/20/876876/1
