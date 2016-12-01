@@ -113,7 +113,8 @@ export class QuestionListComponent {
 			//Set some attributes on the component instance
 			component.instance['appSubject'] 		= window['that'].appSubject;
 			component.instance['name'] 				= window['that'].questions[idx].name;
-			component.instance['questionOptions'] 	= window['that'].questions[idx].items;			
+			component.instance['items'] 			= window['that'].questions[idx].items;
+			component.instance['options'] 			= window['that'].questions[idx].options;						
 
 			_questionComponents.push(component);
 		});

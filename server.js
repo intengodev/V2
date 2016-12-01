@@ -13,8 +13,10 @@ var pages_routes                = require(__dirname + '/src/app/page/server/rout
 var response_routes             = require(__dirname + '/src/app/response/server/routes');
 var participant_routes          = require(__dirname + '/src/app/participant/server/routes');
 var user_routes                 = require(__dirname + '/src/app/user/server/routes');
+
 var question_routes             = require(__dirname + '/src/app/questions/question/server/routes');
 var checkbox_question_routes    = require(__dirname + '/src/app/questions/checkbox-question/server/routes');
+var matrix_question_routes      = require(__dirname + '/src/app/questions/matrix-question/server/routes');
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -44,12 +46,15 @@ app.get('/api', function (req, res) { res.send('API Root'); });
 app.use('/api/projects', project_routes);
 app.use('/api/pages', pages_routes);                //For writing to the file system
 
-app.use('/api/questions', question_routes);
+
 app.use('/api/questions/checkbox', checkbox_question_routes);
+app.use('/api/questions/matrix', matrix_question_routes);
 
 app.use('/api/responses', response_routes);
 app.use('/api/participants', participant_routes);
 app.use('/api/users', user_routes);
+
+app.use('/api/questions', question_routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

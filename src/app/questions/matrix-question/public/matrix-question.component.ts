@@ -2,6 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { QuestionComponent } from '../../question/public/question.component';
 import { PageService }		 from './../../../page/public/page.service';
+import { Http }				 from '@angular/http';
 
 @Component({
   selector: 'matrix-question',
@@ -11,9 +12,12 @@ import { PageService }		 from './../../../page/public/page.service';
 })
 export class MatrixQuestionComponent extends QuestionComponent {
 	private parent;
-	private currentPager  = 0;
-	private questionCount = 0
-	public questions:any  = [
+	private endpoint 	  	= './api/questions/matrix';
+	private currentPager  	= 0;
+	private questionCount 	= 0;
+	private selections:any 	= {};
+	public  options:any;
+	public  questions:any  	= [
 		{
 		text: 'What is the best phone on the market now?'
 		},
@@ -28,73 +32,94 @@ export class MatrixQuestionComponent extends QuestionComponent {
 		}
 	];
 
-	public options:any = [
-	  {
-	  	text: 'Dont Agree'
-	  },
-	  {
-	  	text: 'Neutral'
-	  },
-	  {
-	  	text: 'Definately Agree'
-	  }
-	];
+	constructor(public pageService: PageService, public http: Http){
+		super(pageService);
+		this.questionCount = this.questions.length;
+		this.selections.count = 0;
 
-  constructor(public pageService: PageService){
-  	super(pageService);
-  	this.questionCount = this.questions.length;
-  }
-
-  ngAfterContentInit(){
-  	//init code here
-  }
-
-  toggleChildSelection(target, blinkRate, animationSpeed):any{
-  	var selectionSubject = this.toggleSelection(target, blinkRate, animationSpeed);
-  	selectionSubject.subscribe(resp => {
-  		console.log('incrementing');
-  	},
-  	err => {
-  		console.log('error: ', err)
-  	},
-  	() => {
-  		this.advanceQuestion();
-  	});
-
-  	return false;
-  }
-
-  advanceQuestion($event?){
-  	var count;
-	if(typeof $event !== 'undefined'){
-		count = ($event.target.classList.contains('left') == true) ? (this.currentPager - 1) : (this.currentPager + 1);
-	} else {
-		count = (this.currentPager + 1);
+		this.listenForEvents();	
 	}
 
-  	this.animateOutOldQuestion(this.currentPager);
-  	this.incrementPager(count);
-  	this.animateInNewQuestion(this.currentPager);
+	listenForEvents(){
+		this.pageSubject.subscribe( dto => { if(dto.action == 'question:multiselection:made') this.advanceQuestion(); });
+	}
 
-  	return false;
-  }
+	toggleChildSelection(target, blinkRate, animationSpeed):any{
+		this.makeSelection(this, target, blinkRate, animationSpeed);	  
+		return false;
+	}
 
-  animateOutOldQuestion(oldQuestionIdx){
-  	var targetQuestion  = document.querySelectorAll('#question-' + oldQuestionIdx)[0];
-  	targetQuestion.classList.add('remove');
-  	targetQuestion.classList.remove('remove');
-  }
+	getNextIndex($event?){
+		let to;
+		if(typeof $event !== 'undefined'){
+			to = ($event.target.classList.contains('left') == true) ? (this.currentPager - 1) : (this.currentPager + 1);
+		} else {
+			to = (this.currentPager + 1);
+		}
 
-  animateInNewQuestion(currentPager){
-  	var targetQuestion  = document.querySelectorAll('#question-' + currentPager)[0];
-  	targetQuestion.classList.add('current');
-  }
+		return to;
+	}
 
-  incrementPager(to:number){
-  	if(to == this.questionCount) {
-  		console.log('reached the end at: ', this.questionCount);
-  		return this.currentPager = 0;
-  	}
-  	this.currentPager = to;
-  }
+	advanceQuestion($event?){
+		let nextIdx = this.getNextIndex($event);	
+		console.log('nextIdx: ', nextIdx);
+
+		if(this.questionIsFinished(nextIdx)){
+			this.postData(this.selections).subscribe( resp => {
+				this.pageSubject.next({
+					action: 'question:selection:made',
+					type: 'matrix'
+				});
+			});
+		}
+
+		this.animateOutOldQuestion(this.currentPager);
+		this.incrementPager(nextIdx);
+		this.animateInNewQuestion(this.currentPager);
+
+		return false;
+	}
+
+	animateOutOldQuestion(oldQuestionIdx){
+		var targetQuestion  = document.querySelectorAll('#question-' + oldQuestionIdx)[0];
+		targetQuestion.classList.add('remove');
+		targetQuestion.classList.remove('remove');
+	}
+
+	animateInNewQuestion(currentPager){
+		var targetQuestion  = document.querySelectorAll('#question-' + currentPager)[0];
+		targetQuestion.classList.add('current');
+	}
+
+	incrementPager(to:number){
+		if(to == this.questionCount) return this.currentPager = 0;
+		this.currentPager = to;
+	}
+	
+	questionIsFinished(count):boolean {
+		let endReached = count == this.questionCount;
+
+		return (endReached === true && (this.selections.count >= this.questionCount));
+	}
+
+	extractDtoFromTarget(target){
+		let dto:any  		= {};
+
+		let question_text 	= target.parentElement.parentElement.querySelector('.question.current').innerHTML.trim();
+		let option_text 	= target.innerHTML.trim();
+
+		dto.text 	 		= `${question_text}:${option_text}`; 
+		dto.type 	 		= 'matrix';
+		dto.selection_type  = 'multi';
+		
+		this.selections.count = this.selections.count + 1; 
+		this.selections[this.currentPager] = dto.text;
+
+		return dto;
+	}
+	
+	postData(dto){
+		delete dto.count; 
+		return this.http.post(this.endpoint, dto); 
+	}
 }

@@ -1,5 +1,5 @@
 
-:host { display: block; margin: 0 auto; width: 50%; max-width: 500px; }
+:host { display: block; margin: 0 auto; width: 100%; max-width: 500px; }
 .matrix-questions { position: relative; }
 .matrix-questions .questions {
 	width: 90%;
@@ -60,11 +60,11 @@
 }
 .questions-container ul.pager li.current i { background-color: #fff; }
 
-.matrix-options { 
+.question-options { 
 	width: 90%; margin: 0 auto; 
 }
 
-.matrix-options li {
+.question-options li {
     width: 100%;
     background: rgba(14, 14, 14, .7);
     padding: 15px;
@@ -74,12 +74,12 @@
     /*transition: background-color 200ms;*/
 }
 
-.matrix-options li:hover {
+.question-options li:hover {
 	cursor: pointer;
 	background: rgba(30, 30, 30, .7);
 }
 
-.matrix-options li.selected {
+.question-options li.selected {
 	cursor: pointer;
 	background-color: rgba(111,217,19,0.7);
 }

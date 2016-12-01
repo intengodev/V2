@@ -9,11 +9,11 @@ import { PageService }		 from './../../../page/public/page.service';
   styleUrls: ['./question.component.css']
 })
 export class QuestionComponent {
-  private blinked = 0;
-  private hightlightState = 0;
-  private blinkInterval;
-  private blinkRate;
-  private pageSubject;
+  private   blinked = 0;
+  private   hightlightState = 0;
+  private   blinkInterval;
+  private   blinkRate;
+  protected pageSubject;
 
   constructor(public pageService: PageService){
 	  this.pageSubject = this.pageService.getPageSubject();
@@ -28,21 +28,26 @@ export class QuestionComponent {
 	this.toggleSelection(target, blinkRate, animationSpeed);
 	
 	let dto  = child.extractDtoFromTarget(target);
-	child.postData(dto).subscribe( resp => {
+	if(typeof dto.selection_type !== 'undefined' && dto.selection_type !== 'multi'){
+		child.postData(dto).subscribe( resp => {
 			if(resp.status == 200){
 				this['pageSubject'].next({
 					action: 'question:selection:made',
 					data: resp
-				});
+				}); 
 			} else {
-				console.error('question data post faile: ', resp);
+				console.error('question data post failed: ', resp);
 			}
 		}, 
 		err => {
 			console.log('post error: ', err);
 		}, 
-		resp => {
-	});
+		resp => {});
+	} else {
+		this['pageSubject'].next({
+			action: 'question:multiselection:made'
+	 	});	
+	}
   }
   
   /*

@@ -25,15 +25,15 @@ db.questions.insert([
 		]
 	},
 	{
-		'name' : 'How many times have you used a checkbox question?',
+		'name' : 'Please indicate your agreement with the features are most important in a mobile phone?',
 		'type' : 'matrix',
 		'project_id': 20,
 		'page_idx' : 3,
 		'items': [
-			{text: 'Once a week'},
-			{text: '2-3 times a week'},
-			{text: 'Once a day'},
-			{text: 'Twice a day'}
+			{text: 'Wireless Charging'},
+			{text: 'Waterproof Design'},
+			{text: 'Quick Charging'},
+			{text: 'Bezeless Design'}
 		],
 		"options": [
 			{text: 'Dont Agree'},

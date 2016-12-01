@@ -10,7 +10,7 @@ import { Http } 			 from '@angular/http';
   styleUrls: ['./checkbox-question.component.css']
 })
 export class CheckboxQuestionComponent extends QuestionComponent {
-	public questionOptions:any;
+	public items:any;
 	public name;
 	public endpoint = './api/questions/checkbox';
 
@@ -25,10 +25,11 @@ export class CheckboxQuestionComponent extends QuestionComponent {
   	}
 	
 	extractDtoFromTarget(target){
-		let dto:any  = {};
-		dto.text 	 = target.innerHTML.trim(); 
-		dto.type 	 = 'checkbox';
-
+		let dto:any  		= {};
+		dto.text 	 		= target.innerHTML.trim(); 
+		dto.type 	 		= 'checkbox';
+		dto.selection_type 	= 'single';
+		
 		return dto;
 	}
 

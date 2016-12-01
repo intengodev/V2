@@ -16,7 +16,7 @@ import { PageService } 	 			from './page.service';
   styleUrls: ['./page.component.css']
 })
 export class PageComponent {
-	public  title:string = '';
+	public  title:string;
 	private project_id:number; 
 	private user_id:number;
 	private page_idx:any;
@@ -71,9 +71,9 @@ export class PageComponent {
 
 	fetch(params){
 		this.pageService.fetchPagesData(params['project_id']).subscribe( page_resp => {
-			var data = page_resp.json();
+			var data   = page_resp.json();
 			this.pageService.setPagesData(data); //cache the data in the service to avoid subsequent page calls
-			this.refreshPageData(params, page_resp);
+			this.refreshPageData(params, data);
 		});
 	}
 	
@@ -86,8 +86,8 @@ export class PageComponent {
 		this.project_id = params['project_id'];
 		this.user_id 	= params['user_id'];
 		this.page_idx 	= params['page_idx'];
-		
-		this.title 		= (typeof this.page_idx !== 'undefined') ? page_data.title : '';
+		this.title = page_data[params["page_idx"]].title;
+
 		this.pageSubject.next({
 			action: 'page:data:refreshed'
 		})
