@@ -82,11 +82,12 @@ export class PageComponent {
 	 */
 	refreshPageData(params, page_data){
 		this.pageService.setParamsFromRouter(params);
+		let page_idx 	= parseInt(params["page_idx"]) - 1;
 
 		this.project_id = params['project_id'];
 		this.user_id 	= params['user_id'];
 		this.page_idx 	= params['page_idx'];
-		this.title = page_data[params["page_idx"]].title;
+		this.title 		= (typeof page_data.title !== 'undefined') ? page_data.title : page_data[page_idx].title;
 
 		this.pageSubject.next({
 			action: 'page:data:refreshed'

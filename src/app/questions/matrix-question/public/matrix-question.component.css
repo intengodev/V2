@@ -1,5 +1,7 @@
 
 :host { display: block; margin: 0 auto; width: 100%; max-width: 500px; }
+:host .title { margin-top: 25px; }
+
 .matrix-questions { position: relative; }
 .matrix-questions .questions {
 	width: 90%;
