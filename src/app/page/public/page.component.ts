@@ -2,7 +2,11 @@
 import { Component, OnInit } 		from '@angular/core';
 import { QuestionListComponent }  	from '../../questions/question-list/public/question-list.component';
 
+import { Observable } from 'rxjs/Rx';
+import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/delay';
+import 'rxjs/add/operator/debounce';
 
 import { ActivatedRoute, Router }	from '@angular/router';
 
@@ -20,10 +24,14 @@ export class PageComponent {
 	private project_id:number; 
 	private user_id:number;
 	private page_idx:any;
-	private animationSpeed = 200;
-
-	public  pageSubject:any;
+	
+	private animationSpeed  = 200;
+	private transitionDelay = this.animationSpeed * 10;
 	public  currentState 		= 'dormant';
+	
+	public  pageSubject:any;
+	private transitionSubscription;
+	private transitionSource;
 	public  subscription;
 	
 	constructor(
@@ -41,7 +49,15 @@ export class PageComponent {
 		this.user_id    = params['user_id'];
 		this.page_idx   = params['page_idx'];
 		
+		this.transitionSubscription = this.getTransitionSubscription();
+
 		this.listenForEvents();
+	}
+
+	getTransitionSubscription(){
+		let page:any = document.querySelectorAll("page")[0];
+		return Observable.fromEvent(page, "transitionend")
+		.filter( evt => evt['target'].nodeName === 'PAGE');
 	}
 	
 	/**
@@ -51,7 +67,24 @@ export class PageComponent {
 		this.subscription = this.route.params.subscribe( params => { this.updatePage(params); });
 		this.pageSubject.filter( dto => {
 			if(typeof dto.action !== 'undefined') return (dto.action.indexOf("page") > -1);
-		}).subscribe( dto => this.delegatePageEvents(dto));
+		})
+		.delay(500)
+		.subscribe( dto => {
+			this.delegatePageEvents(dto) 
+		});
+
+		this.transitionSource = this.transitionSubscription.subscribe( dto => {
+			//console.log('transition subscription firing', dto);
+			
+			if(dto.action == "page:reset") this.resetPageState(dto);
+			if(dto.action == "page:transition:in") this.transitionIn(dto);
+		}, 
+		err => {
+
+		}, 
+		(dto) => {
+			console.log('transition complete and dto: ', dto);
+		});
 	}
 	
 	/**
@@ -91,13 +124,13 @@ export class PageComponent {
 
 		this.pageSubject.next({
 			action: 'page:data:refreshed'
-		})
+		});
 	}
 	
 	delegatePageEvents(dto){
+		//console.log('delegatePageEvents: ', dto.action);
 		if(dto.action == "page:transition:out") this.transitionOut(dto);
-		if(dto.action == "page:reset") this.resetPageState(dto);
-		if(dto.action == "page:transition:in") this.transitionIn(dto);
+		this.transitionSource.next(dto);
 	}
 
 	transitionOut(dto){
@@ -107,33 +140,32 @@ export class PageComponent {
 	
 	//TODO: Remove these timeouts in favor of an angular 2 animation strategy
 	resetPageState(dto){
-		window.setTimeout(() => {
-			let node = document.querySelectorAll('.page.active')[0];
-			this.currentState = 'dormant';
-			node.classList.remove('active', 'transitioningOut');
-			
-		}, this.animationSpeed + 150);
+		let node = document.querySelectorAll('.page.active')[0];
+		this.currentState = 'dormant';
+		node.classList.remove('active', 'transitioningOut');	
 	}
 
 	transitionIn(dto){
+		//TODO: Fix the transition in animation 
+
 		window.setTimeout(() => {
 			let nextPageIdx = Number(this.page_idx) + 1;
 			let node = document.querySelectorAll('.page')[0];
-
 			this.router.navigate(['/', this.project_id, this.user_id, nextPageIdx]);
 			
 			this.currentState = 'transitioningIn';
 			node.classList.add(this.currentState);
-
+			
 			window.setTimeout(() => {
 				this.currentState = 'active';
 				node.classList.add(this.currentState);
 				node.classList.remove('transitioningIn');
-			}, this.animationSpeed);
-		}, this.animationSpeed + 250);
+			}, this.animationSpeed + 250);
+		}, this.animationSpeed);
 	}
 
 	ngOnDestroy () {
+		console.log('ngOnDestroy');
 		 this.subscription.unsubscribe();
 	 }
 }
