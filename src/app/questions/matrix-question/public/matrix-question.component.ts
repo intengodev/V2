@@ -62,7 +62,6 @@ export class MatrixQuestionComponent extends QuestionComponent {
 
 	advanceQuestion($event?){
 		let nextIdx = this.getNextIndex($event);	
-		console.log('nextIdx: ', nextIdx);
 
 		if(this.questionIsFinished(nextIdx)){
 			this.postData(this.selections).subscribe( resp => {

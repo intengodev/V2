@@ -55,8 +55,6 @@ export class QuestionComponent {
   * returns a BehaviorSubject
   */
   toggleSelection(target, blinkRate, animationSpeed):any {
-  	console.log('parent toggle selection');
-
   	this.clearOptionSelections(document.querySelectorAll('.question-options .option'));
   	this.blinkRate = blinkRate;
   	this.highlight(target);
