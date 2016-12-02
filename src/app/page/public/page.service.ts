@@ -1,22 +1,43 @@
 
 import { Injectable } 		from '@angular/core';
 import { Http } 			from '@angular/http';
+
+import { Observable } 		from "rxjs";
 import { BehaviorSubject }  from 'rxjs/BehaviorSubject';
  
+import { SocketService } 	from "../../shared/socket.service";
+
 var self;
 
 @Injectable()
 export class PageService {
-  private pageSubject: BehaviorSubject<any> = new BehaviorSubject({});
-  private project_id;
-  private user_id;
-  public  page_idx;
-  private endpoint = '/api/pages';
-  private page_data; 
+	private host: string = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port;
+	private endpoint = '/api/pages';
+	private pageSubject: BehaviorSubject<any> = new BehaviorSubject({});
+  
+	private project_id;
+	private user_id;
+	public  page_idx;
+	private page_data; 
 
-  constructor(public http: Http){
-  	this.delegateEvents();
-  }
+	constructor(public http: Http, private socketService: SocketService){
+		this.init();
+	}
+
+	init(){
+		console.log('initing page service');
+		this.initSocket();
+		this.delegateEvents();
+	}
+
+	initSocket(){
+		this.socketService 	= new SocketService();
+		this.socketService.get('/pages')
+		.subscribe((socketItem) => {
+			console.log('socket message: ', socketItem);
+		}, 
+		err => console.error('socket error: ', err));
+	}
 
 	setParamsFromRouter(params){
 		this.project_id = params['project_id'];

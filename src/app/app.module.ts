@@ -8,6 +8,8 @@ import { LocationStrategy,
          HashLocationStrategy }       from '@angular/common';
 
 import { PageService }                from './page/public/page.service';
+import { SocketService }              from './shared/socket.service';
+
 import { AppComponent }               from './app.component';
 import { ProgressBarComponent }       from './progress-bar/progress-bar.component';
 
@@ -47,6 +49,7 @@ import { AppRoutingModule }           from './app-routing.module';
   providers: [
     QuestionListService,
     PageService,
+    SocketService,
     { provide : LocationStrategy , useClass : HashLocationStrategy },
   ],
   bootstrap: [AppComponent]

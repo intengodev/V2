@@ -40,8 +40,8 @@ import { PageService } 	 			from './page.service';
 			transform: 'translateX(-100%)'
 		})),
 
-      transition('void => active', animate('200ms ease-in')),
-      transition('active => inactive', animate('200ms ease-out'))
+      transition('void   	=> active', animate('500ms  ease-in')),
+      transition('active 	=> inactive', animate('200ms ease-out'))
     ])
   ]
 })
@@ -53,7 +53,7 @@ export class PageComponent {
 	
 	private animationSpeed  = 200;
 	private transitionDelay = this.animationSpeed * 10;
-	public  currentState 		= 'void';
+	public  currentState    = 'void';
 	
 	public  pageSubject:any;
 	private transitionSubscription;
@@ -77,15 +77,19 @@ export class PageComponent {
 		
 		this.transitionSubscription = this.getTransitionSubscription();
 		
-		this.currentState = 'active';
+		window.setTimeout(() => {
+			this.currentState = 'active';
+		}, 500);
+
 		this.listenForEvents();
 	}
-
+	
 	getTransitionSubscription(){
 		let page:any = document.querySelectorAll("page")[0];
 		return Observable.fromEvent(page, "transitionend")
 		.filter( evt => evt['target'].nodeName === 'PAGE');
 	}
+	
 	
 	/**
 	 * Listens for route and page changes
@@ -160,8 +164,8 @@ export class PageComponent {
 	}
 
 	transitionOut(dto){
+		console.log('transition out');
 		this.currentState = 'inactive';
-		window['state'] = this.currentState;
 	}
 	
 	//TODO: Remove these timeouts in favor of an angular 2 animation strategy
@@ -170,6 +174,7 @@ export class PageComponent {
 	}
 
 	transitionIn(dto){
+		console.log('transition in');
 		window.setTimeout(() => {
 			let nextPageIdx = Number(this.page_idx) + 1;
 			this.router.navigate(['/', this.project_id, this.user_id, nextPageIdx]);
