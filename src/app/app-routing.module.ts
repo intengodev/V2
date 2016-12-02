@@ -7,6 +7,7 @@ import { AppComponent } 		    from './app.component';
 import { PageComponent } 		    from './page/public/page.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 
+//https://angular.io/docs/ts/latest/guide/router.html
 const routes: Routes = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: PageComponent },

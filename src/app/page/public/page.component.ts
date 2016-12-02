@@ -1,5 +1,12 @@
 
-import { Component, OnInit } 		from '@angular/core';
+import { 
+	Component,
+	trigger,
+	state,
+	style,
+	transition,
+	animate
+} 									from '@angular/core';
 import { QuestionListComponent }  	from '../../questions/question-list/public/question-list.component';
 
 import { Observable } from 'rxjs/Rx';
@@ -15,9 +22,28 @@ import { PageService } 	 			from './page.service';
 
 @Component({
   selector: 'page',
-  host: { 'class': 'page active' },
+  host: { 
+	  'class': 'page',
+	  '[@pageState]': 'currentState'
+},
   templateUrl: './page.component.html',
-  styleUrls: ['./page.component.css']
+  styleUrls: ['./page.component.css'],
+  animations: [
+    trigger('pageState', [
+		state('void', style({
+			transform: 'translateX(200%)',
+		})),
+		state('active', style({
+			transform: 'translateX(0%)',
+		})),
+		state('inactive',   style({
+			transform: 'translateX(-100%)'
+		})),
+
+      transition('void => active', animate('200ms ease-in')),
+      transition('active => inactive', animate('200ms ease-out'))
+    ])
+  ]
 })
 export class PageComponent {
 	public  title:string;
@@ -27,7 +53,7 @@ export class PageComponent {
 	
 	private animationSpeed  = 200;
 	private transitionDelay = this.animationSpeed * 10;
-	public  currentState 		= 'dormant';
+	public  currentState 		= 'void';
 	
 	public  pageSubject:any;
 	private transitionSubscription;
@@ -50,7 +76,8 @@ export class PageComponent {
 		this.page_idx   = params['page_idx'];
 		
 		this.transitionSubscription = this.getTransitionSubscription();
-
+		
+		this.currentState = 'active';
 		this.listenForEvents();
 	}
 
@@ -75,7 +102,6 @@ export class PageComponent {
 
 		this.transitionSource = this.transitionSubscription.subscribe( dto => {
 			//console.log('transition subscription firing', dto);
-			
 			if(dto.action == "page:reset") this.resetPageState(dto);
 			if(dto.action == "page:transition:in") this.transitionIn(dto);
 		}, 
@@ -134,32 +160,24 @@ export class PageComponent {
 	}
 
 	transitionOut(dto){
-		this.currentState = 'transitioningOut';
-		document.querySelectorAll('.page')[0].classList.add(this.currentState);
+		this.currentState = 'inactive';
+		window['state'] = this.currentState;
 	}
 	
 	//TODO: Remove these timeouts in favor of an angular 2 animation strategy
 	resetPageState(dto){
-		let node = document.querySelectorAll('.page.active')[0];
-		this.currentState = 'dormant';
-		node.classList.remove('active', 'transitioningOut');	
+		//this.currentState = 'dormant';	
 	}
 
 	transitionIn(dto){
-		//TODO: Fix the transition in animation 
-
 		window.setTimeout(() => {
 			let nextPageIdx = Number(this.page_idx) + 1;
-			let node = document.querySelectorAll('.page')[0];
 			this.router.navigate(['/', this.project_id, this.user_id, nextPageIdx]);
 			
-			this.currentState = 'transitioningIn';
-			node.classList.add(this.currentState);
-			
+			this.currentState = 'void';
+
 			window.setTimeout(() => {
 				this.currentState = 'active';
-				node.classList.add(this.currentState);
-				node.classList.remove('transitioningIn');
 			}, this.animationSpeed + 250);
 		}, this.animationSpeed);
 	}
