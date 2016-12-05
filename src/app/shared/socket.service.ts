@@ -29,15 +29,36 @@ export class SocketService {
 
         // Return observable which follows "create" and "remove" signals from socket stream
         return Observable.create((observer: any) => {
-            this.socket.on("create", (item: any) => observer.next({ action: "create", item: item }) );
-            this.socket.on("remove", (item: any) => observer.next({ action: "remove", item: item }) );
+            this.socket.on("item:save:success", (item: any) => observer.next({ action: "item:save:success", item: item }) );
+            this.socket.on("item:save:error", (item: any) => observer.next({ action: "item:save:error", item: item }) );
             return () => this.socket.close();
         });
     }
-    
+
+    resolveEmissionPrefix(dto){
+        let prefix;
+
+        switch(dto.selection_type){
+            case 'multi':
+            case 'single':
+                prefix = 'question';
+            break;
+
+            default:
+                prefix = 'page';
+            break;
+        }
+        
+        return prefix;
+    }
+
     // Create signal
-    create(name: string) {
-        this.socket.emit("create", name);
+    save(dto: any) {
+        let prefix = this.resolveEmissionPrefix(dto)
+        let msg    = `${prefix}:save`;
+
+        console.log(`emitting ${msg} with: `, dto);
+        this.socket.emit(msg, dto);
     }
 
     // Remove signal
@@ -47,6 +68,7 @@ export class SocketService {
 
     // Handle connection opening
     private connect() {
+        window['socket'] = this.socket;
         console.log(`Connected to "${this.name}"`);
 
         // Request initial list when connected

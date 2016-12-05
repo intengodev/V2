@@ -1,7 +1,9 @@
 
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } 	 from 'rxjs/BehaviorSubject';
+
 import { PageService }		 from './../../../page/public/page.service';
+import { SocketService } 	 from "../../../shared/socket.service";
 
 @Component({
   selector: 'app-question',
@@ -14,8 +16,9 @@ export class QuestionComponent {
   private   blinkInterval;
   private   blinkRate;
   protected pageSubject;
+  protected endpoint:string = '/questions';
 
-  constructor(public pageService: PageService){
+  constructor(public pageService: PageService, protected socketService: SocketService){
 	  this.pageSubject = this.pageService.getPageSubject();
   }
   
@@ -29,14 +32,14 @@ export class QuestionComponent {
 	
 	let dto  = child.extractDtoFromTarget(target);
 	if(typeof dto.selection_type !== 'undefined' && dto.selection_type !== 'multi'){
-		child.postData(dto).subscribe( resp => {
-			if(resp.status == 200){
+		child.postData(dto).subscribe( dto => {
+			if(dto.action == 'item:save:success'){
 				this['pageSubject'].next({
 					action: 'question:selection:made',
-					data: resp
+					data: dto
 				}); 
 			} else {
-				console.error('question data post failed: ', resp);
+				console.error('question data post failed: ', dto);
 			}
 		}, 
 		err => {
@@ -55,6 +58,8 @@ export class QuestionComponent {
   * returns a BehaviorSubject
   */
   toggleSelection(target, blinkRate, animationSpeed):any {
+	if(typeof target.skipHighlight !== "undefined" && target.skipHighlight == true) return;
+	
   	this.clearOptionSelections(document.querySelectorAll('.question-options .option'));
   	this.blinkRate = blinkRate;
   	this.highlight(target);

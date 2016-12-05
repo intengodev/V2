@@ -19,7 +19,7 @@ module.exports  = function(app, io){
     var nsp = io.of('/api/questions/checkbox'); 
     nsp.on('connection', function (socket) {
         console.log('Checkbox Socket Namespace Connected');
-        socket.emit('news', { hello: 'world' });
+        socket.emit('checkbox connected on the server', { msg: 'hello world' });
         socket.on('my other event', function (data) {
             console.log(data);
         });

@@ -1,8 +1,9 @@
 
 import { Component, OnInit } from '@angular/core';
 import { QuestionComponent } from '../../question/public/question.component';
+
 import { PageService }		 from './../../../page/public/page.service';
-import { Http }				 from '@angular/http';
+import { SocketService } 	 from "../../../shared/socket.service";
 
 @Component({
   selector: 'matrix-question',
@@ -12,36 +13,39 @@ import { Http }				 from '@angular/http';
 })
 export class MatrixQuestionComponent extends QuestionComponent {
 	private parent;
-	private endpoint 	  	= './api/questions/matrix';
 	private currentPager  	= 0;
 	private questionCount 	= 0;
 	private selections:any 	= {};
 	public  options:any;
-	public  questions:any  	= [
-		{
-		text: 'What is the best phone on the market now?'
-		},
-		{
-		text: 'Do you think Apple is competing technologically with Android?'
-		},
-		{
-		text: 'Apple is going to be losing market share in the coming months?'
-		},
-		{
-		text: 'Android phones are superior due to Apple\'s complacency'
-		}
-	];
+	public  questions:any   = [];
+	protected connection;
 
-	constructor(public pageService: PageService, public http: Http){
-		super(pageService);
-		this.questionCount = this.questions.length;
-		this.selections.count = 0;
+	constructor(public pageService: PageService, protected socketService: SocketService){
+		super(pageService, socketService);
+		this.questionCount 		= this.questions.length;
+		this.selections.count 	= 0;
+	
+		this.init();
+  	}
+	
+	init(){ 
+		this.initSocket();
+		this.listenForEvents(); 
+	}
+	
+	ngAfterViewInit(){
+		this.questionCount = this['items'].length;
+	}
 
-		this.listenForEvents();	
+	initSocket(){
+		this.socketService 	  = new SocketService();
+		this.connection 	  = this.socketService.get(this.endpoint);
 	}
 
 	listenForEvents(){
-		this.pageSubject.subscribe( dto => { if(dto.action == 'question:multiselection:made') this.advanceQuestion(); });
+		this.pageSubject.subscribe( dto => {
+			if(dto.action == 'question:multiselection:made') this.advanceQuestion(); 
+		});
 	}
 
 	toggleChildSelection(target, blinkRate, animationSpeed):any{
@@ -64,7 +68,15 @@ export class MatrixQuestionComponent extends QuestionComponent {
 		let nextIdx = this.getNextIndex($event);	
 
 		if(this.questionIsFinished(nextIdx)){
-			this.postData(this.selections).subscribe( resp => {
+			let dto = {
+				type: 'matrix',
+				selection_type: 'multi',
+				selections: this.selections
+			};
+			
+			this.postData(dto).subscribe( resp => {
+				console.log('matrix post data resp: ');
+
 				this.pageSubject.next({
 					action: 'question:selection:made',
 					type: 'matrix'
@@ -97,8 +109,9 @@ export class MatrixQuestionComponent extends QuestionComponent {
 	
 	questionIsFinished(count):boolean {
 		let endReached = count == this.questionCount;
+		let isFinished = (endReached === true && (this.selections.count >= this.questionCount));
 
-		return (endReached === true && (this.selections.count >= this.questionCount));
+		return isFinished;
 	}
 
 	extractDtoFromTarget(target){
@@ -118,7 +131,9 @@ export class MatrixQuestionComponent extends QuestionComponent {
 	}
 	
 	postData(dto){
-		delete dto.count; 
-		return this.http.post(this.endpoint, dto); 
+		delete dto.count;  
+
+		this.socketService.save(dto);
+		return this.connection; 
 	}
 }

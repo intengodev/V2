@@ -1,8 +1,8 @@
 
-var express             = require('express');
-var router              = express.Router();
+var express                     = require('express');
+var router                      = express.Router();
 
-var QuestionsController = require('./controllers/questions');
+var QuestionsController         = require('./controllers/questions');
 
 router.route('/')
 .get(function(req, res){
@@ -23,9 +23,15 @@ module.exports  = function(app, io){
     var nsp = io.of('/api/questions'); 
     nsp.on('connection', function (socket) {
         console.log('Questions Socket Namespace Connected');
-        socket.emit('news', { hello: 'world' });
-        socket.on('my other event', function (data) {
-            console.log(data);
+        
+        socket.on('question:save', function(dto){            
+            var resp = QuestionsController.proxyEvents(dto);
+
+            if(resp.status == 'success'){
+                socket.emit('item:save:success', dto);
+            } else {
+                socket.emit('item:save:error', dto);
+            }
         });
     });
 }; 

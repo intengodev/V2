@@ -164,7 +164,6 @@ export class PageComponent {
 	}
 
 	transitionOut(dto){
-		console.log('transition out');
 		this.currentState = 'inactive';
 	}
 	
@@ -174,7 +173,6 @@ export class PageComponent {
 	}
 
 	transitionIn(dto){
-		console.log('transition in');
 		window.setTimeout(() => {
 			let nextPageIdx = Number(this.page_idx) + 1;
 			this.router.navigate(['/', this.project_id, this.user_id, nextPageIdx]);

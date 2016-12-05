@@ -1,8 +1,9 @@
 
 import { Component, Inject } from '@angular/core';
 import { QuestionComponent } from '../../question/public/question.component';
+
 import { PageService }		 from './../../../page/public/page.service';
-import { Http } 			 from '@angular/http';
+import { SocketService } 	 from "../../../shared/socket.service";
 
 @Component({
   selector: 'checkbox-question',
@@ -12,12 +13,20 @@ import { Http } 			 from '@angular/http';
 export class CheckboxQuestionComponent extends QuestionComponent {
 	public items:any;
 	public name;
-	public endpoint = './api/questions/checkbox';
+	protected connection;
 
-	constructor(public pageService: PageService, public http: Http){
-	  super(pageService);
+	constructor(public pageService: PageService, protected socketService: SocketService){
+	  super(pageService, socketService);
+	  this.init();
   	}
+	
+	init(){ this.initSocket(); }
 
+	initSocket(){
+		this.socketService 	  = new SocketService();
+		this.connection 	  = this.socketService.get(this.endpoint);
+	}
+	
 	toggleChildSelection(target, blinkRate, animationSpeed):any{
 	  	this.makeSelection(this, target, blinkRate, animationSpeed);
 		  
@@ -33,5 +42,8 @@ export class CheckboxQuestionComponent extends QuestionComponent {
 		return dto;
 	}
 
-	postData(dto){ return this.http.post(this.endpoint, dto); }
+	postData(dto){ 
+		this.socketService.save(dto);
+		return this.connection; 
+	}
 }
