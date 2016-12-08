@@ -1,5 +1,5 @@
 
-import { Component, ViewChild, 
+import { Component, Input, ViewChild, 
 		 ViewContainerRef, 
 		 ComponentFactoryResolver }   from '@angular/core';
 
@@ -19,7 +19,6 @@ window['factories'] = {};
   selector: 'question-list',
   templateUrl: './question-list.component.html',
   styleUrls: ['./question-list.component.css'],
-  inputs: ['project_id', 'user_id', 'page_idx', 'appSubject'],
   entryComponents: [
   	CheckboxQuestionComponent,
   	RatingQuestionComponent,
@@ -27,14 +26,16 @@ window['factories'] = {};
   ]
 })
 export class QuestionListComponent {
+	@Input() project_id: number;
+	@Input() page_idx:number;
+	@Input() user_id:any;
+
 	public  dev = false;
 	public  questions:any;
 	private componentRefs;
 	private questionsAnswered = 0;
 	private routesSubscription;
-	public 	project_id:number;
-	public  page_idx:number;
-	public  pageSubject:any;
+	public pageSubject:any;
 
 	constructor(
 		private qss: QuestionListService,

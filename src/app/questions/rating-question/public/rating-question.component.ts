@@ -38,9 +38,9 @@ export class RatingQuestionComponent extends QuestionComponent {
 		});
 	}
 
-  ngAfterViewInit(){
-  	$('.ui.rating').rating('setting', 'clearable', true);
-  }
+  ngAfterViewInit(){ 
+		$('.ui.rating').rating('setting', 'clearable', true); 
+	}
 
 	toggleChildSelection(target, blinkRate, animationSpeed):any{
     target.skipHighlight = true;

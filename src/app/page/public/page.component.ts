@@ -16,8 +16,6 @@ import 'rxjs/add/operator/delay';
 import 'rxjs/add/operator/debounce';
 
 import { ActivatedRoute, Router }	from '@angular/router';
-
-import { AppRoutingModule }         from './../../app-routing.module';
 import { PageService } 	 			from './page.service';
 
 @Component({

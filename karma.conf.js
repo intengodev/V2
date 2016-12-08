@@ -12,6 +12,8 @@ module.exports = function (config) {
       require('angular-cli/plugins/karma')
     ],
     files: [
+      './src/vendors/jquery/dist/jquery.js',
+      './src/vendors/semantic/dist/semantic.js',
       { pattern: './src/test.ts', watched: false }
     ],
     preprocessors: {
@@ -25,7 +27,10 @@ module.exports = function (config) {
     },
     angularCli: {
       config: './angular-cli.json',
-      environment: 'dev'
+      environment: 'dev',
+      scripts: [
+        "./../node_modules/socket.io-client/dist/socket.io.js"
+      ]
     },
     reporters: ['progress', 'karma-remap-istanbul'],
     port: 9876,

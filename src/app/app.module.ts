@@ -1,6 +1,8 @@
 
 import { BrowserModule }              from '@angular/platform-browser';
-import { NgModule }                   from '@angular/core';
+import { NgModule, 
+         CUSTOM_ELEMENTS_SCHEMA 
+        }                             from '@angular/core';
 import { FormsModule }                from '@angular/forms';
 import { HttpModule }                 from '@angular/http';
 
@@ -18,7 +20,6 @@ import { PageComponent }              from './page/public/page.component';
 import { QuestionComponent }          from './questions/question/public/question.component';
 import { RadioQuestionComponent }     from './questions/radio-question/public/radio-question.component';
 import { CheckboxQuestionComponent }  from './questions/checkbox-question/public/checkbox-question.component';
-import { RadioClickQuestionComponent }from './questions/radio-click-question/public/radio-click-question.component';
 import { QuestionListComponent }      from './questions/question-list/public/question-list.component';
 import { QuestionListService }        from './questions/question-list/public/question-list-service';
 import { RatingQuestionComponent }    from './questions/rating-question/public/rating-question.component';
@@ -28,6 +29,7 @@ import { MatrixQuestionComponent }    from './questions/matrix-question/public/m
 import { AppRoutingModule }           from './app-routing.module';
 
 @NgModule({
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
   declarations: [
     AppComponent,
     PageComponent,
@@ -35,7 +37,6 @@ import { AppRoutingModule }           from './app-routing.module';
     RadioQuestionComponent,
     CheckboxQuestionComponent,
     ProgressBarComponent,
-    RadioClickQuestionComponent,
     QuestionListComponent,
     RatingQuestionComponent,
     MatrixQuestionComponent

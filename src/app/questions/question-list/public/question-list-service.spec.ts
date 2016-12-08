@@ -1,7 +1,5 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
+import { TestBed, async, inject } from '@angular/core/testing';
 
 import { HttpModule, Http, BaseRequestOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
@@ -9,19 +7,17 @@ import { MockBackend } from '@angular/http/testing';
 import { Router, RouterModule, RouterOutlet, ActivatedRoute }   from '@angular/router';
 import { RouterTestingModule }    from '@angular/router/testing';
 
+import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
+
 import { PageService }		   from './../../../page/public/page.service';
 import { SocketService } 	   from "../../../shared/socket.service";
-import { QuestionListService }        from './../../question-list/public/question-list-service';
 
-import { MatrixQuestionComponent } from './matrix-question.component';
+import { QuestionListService } from './question-list-service';
 
-describe('MatrixQuestionComponent', () => {
-  let component: MatrixQuestionComponent;
-  let fixture: ComponentFixture<MatrixQuestionComponent>;
-
-  beforeEach(async(() => {
+describe('Service: QuestionListService', () => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
-      declarations: [ MatrixQuestionComponent ],
       providers: [
         QuestionListService,
         PageService,
@@ -47,17 +43,10 @@ describe('MatrixQuestionComponent', () => {
         }
       ],
       imports: [RouterModule]
-    })
-    .compileComponents();
+    });
+  });
+
+  it('should ...', inject([QuestionListService], (service: QuestionListService) => {
+    expect(service).toBeTruthy();
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(MatrixQuestionComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
 });

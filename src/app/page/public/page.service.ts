@@ -5,7 +5,7 @@ import { Http } 			from '@angular/http';
 import { Observable } 		from "rxjs";
 import { BehaviorSubject }  from 'rxjs/BehaviorSubject';
  
-import { SocketService } 	from "../../shared/socket.service";
+import { SocketService } 	from "./../../shared/socket.service.ts";
 
 var self;
 
