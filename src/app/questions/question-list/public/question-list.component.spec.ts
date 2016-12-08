@@ -11,17 +11,30 @@ import { RouterTestingModule }    from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 
-import { PageService }		   from './../../../page/public/page.service';
-import { SocketService } 	   from "../../../shared/socket.service";
+import { PageService }		             from './../../../page/public/page.service';
+import { SocketService } 	             from "../../../shared/socket.service";
 
+import { PageComponent }              from './../../../page/public/page.component';
 import { RadioQuestionComponent }     from './../../radio-question/public/radio-question.component';
 import { CheckboxQuestionComponent }  from './../../checkbox-question/public/checkbox-question.component';
 import { QuestionListService }        from './../../question-list/public/question-list-service';
 import { RatingQuestionComponent }    from './../../rating-question/public/rating-question.component';
 import { MatrixQuestionComponent }    from './../../matrix-question/public/matrix-question.component';
+import { ProgressBarComponent }       from './../../../progress-bar/progress-bar.component';
 
 //SUT
 import { QuestionListComponent } from './question-list.component';
+
+const ROUTES: any = [
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: PageComponent },
+  { 
+    path: ':project_id/:user_id/:page_idx', component: PageComponent,
+    children: [
+      { path: '', component: ProgressBarComponent }
+    ]
+  }
+]
 
 describe('QuestionListComponent', () => {
   let component: QuestionListComponent;
@@ -32,10 +45,13 @@ describe('QuestionListComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
       declarations: [ 
         QuestionListComponent,
+        PageComponent,
+        QuestionListComponent,
+        ProgressBarComponent,
         CheckboxQuestionComponent,
         RadioQuestionComponent,
-        RatingQuestionComponent,
-        MatrixQuestionComponent
+        MatrixQuestionComponent,
+        RatingQuestionComponent 
       ],
       providers: [
         QuestionListService,
@@ -49,19 +65,9 @@ describe('QuestionListComponent', () => {
           deps: [MockBackend, BaseRequestOptions]
         },
         MockBackend,
-        BaseRequestOptions,
-        {
-          provide: Router,
-          useClass: class {
-              navigate = jasmine.createSpy("navigate");
-          }
-        },
-        {
-          provide: ActivatedRoute,
-          useClass: class { }
-        }
+        BaseRequestOptions
       ],
-      imports: [RouterModule]
+      imports: [ RouterTestingModule.withRoutes(ROUTES) ]
     })
     .compileComponents();
   }));

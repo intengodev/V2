@@ -19,6 +19,7 @@ export class MatrixQuestionComponent extends QuestionComponent {
 	public  options:any;
 	public  questions:any   = [];
 	protected connection;
+	public items:any 		= [];
 
 	constructor(public pageService: PageService, protected socketService: SocketService){
 		super(pageService, socketService);

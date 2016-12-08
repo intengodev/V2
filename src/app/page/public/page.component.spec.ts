@@ -4,7 +4,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpModule, Http, BaseRequestOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 
-import { Router, RouterModule, RouterOutlet, ActivatedRoute, RouterOutletMap }   from '@angular/router';
 import { RouterTestingModule }    from '@angular/router/testing';
 
 import { By } from '@angular/platform-browser';
@@ -25,6 +24,17 @@ import { MatrixQuestionComponent }    from './../../questions/matrix-question/pu
 
 import { PageComponent } from './page.component';
 
+const ROUTES: any = [
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: PageComponent },
+  { 
+    path: ':project_id/:user_id/:page_idx', component: PageComponent,
+    children: [
+      //{ path: '', redirectTo: 'progress', pathMatch: 'full'},
+      { path: '', component: ProgressBarComponent }
+    ]
+  }
+]
 
 describe('PageComponent', () => {
   let component: PageComponent;
@@ -47,28 +57,19 @@ describe('PageComponent', () => {
         QuestionListService,
         PageService,
         SocketService,
+        MockBackend,
+        BaseRequestOptions,
         {
           provide: Http,
           useFactory: (mockBackend, options) => {
             return new Http(mockBackend, options)
           },
-          deps: [MockBackend, BaseRequestOptions]
-        },
-        MockBackend,
-        BaseRequestOptions,
-        {
-          provide: Router,
-          useClass: class {
-              navigate = jasmine.createSpy("navigate");
-          }
-        },
-        {
-          provide: ActivatedRoute,
-          useClass: class { }
+          deps: [ MockBackend, BaseRequestOptions]
         }
       ],
-      imports: [RouterModule]  
-      
+      imports: [
+        RouterTestingModule.withRoutes(ROUTES)
+      ]  
     })
     .compileComponents();
   }));

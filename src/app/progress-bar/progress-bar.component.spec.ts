@@ -6,10 +6,33 @@ import { DebugElement } from '@angular/core';
 import { HttpModule, Http, BaseRequestOptions } from '@angular/http';
 import { MockBackend } from '@angular/http/testing';
 
-import { Router, RouterModule, RouterOutlet, ActivatedRoute }   from '@angular/router';
-import { RouterTestingModule }    from '@angular/router/testing';
+import { RouterTestingModule }   from '@angular/router/testing';
 
-import { ProgressBarComponent } from './progress-bar.component';
+import { PageService }		   from './../page/public/page.service';
+import { SocketService } 	   from "./../shared/socket.service";
+import { QuestionListService }        from './../questions/question-list/public/question-list-service';
+
+//import { AppComponent }             from './../../app.component';
+import { PageComponent }              from './../page/public/page.component';
+import { QuestionListComponent }      from './../questions/question-list/public/question-list.component';
+import { RadioQuestionComponent }     from './../questions/radio-question/public/radio-question.component';
+import { CheckboxQuestionComponent }  from './../questions/checkbox-question/public/checkbox-question.component';
+import { RatingQuestionComponent }    from './../questions/rating-question/public/rating-question.component';
+import { MatrixQuestionComponent }    from './../questions/matrix-question/public/matrix-question.component';
+
+import { ProgressBarComponent }       from './progress-bar.component';
+
+const ROUTES: any = [
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: 'home', component: PageComponent },
+  { 
+    path: ':project_id/:user_id/:page_idx', component: PageComponent,
+    children: [
+      //{ path: '', redirectTo: 'progress', pathMatch: 'full'},
+      { path: '', component: ProgressBarComponent }
+    ]
+  }
+]
 
 describe('ProgressBarComponent', () => {
   let component: ProgressBarComponent;
@@ -17,29 +40,32 @@ describe('ProgressBarComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProgressBarComponent ],
+      declarations: [
+        QuestionListComponent,
+        PageComponent,
+        ProgressBarComponent ,
+        CheckboxQuestionComponent,
+        RadioQuestionComponent,
+        RatingQuestionComponent,
+        MatrixQuestionComponent
+      ],
       providers: [
+        PageService,
+        QuestionListService,
+        SocketService,
+        MockBackend,
+        BaseRequestOptions,
         {
           provide: Http,
           useFactory: (mockBackend, options) => {
             return new Http(mockBackend, options)
           },
           deps: [MockBackend, BaseRequestOptions]
-        },
-        MockBackend,
-        BaseRequestOptions,
-        {
-          provide: Router,
-          useClass: class {
-              navigate = jasmine.createSpy("navigate");
-          }
-        },
-        {
-          provide: ActivatedRoute,
-          useClass: class { }
         }
       ],
-      imports: [RouterModule]
+      imports: [
+        RouterTestingModule.withRoutes(ROUTES)
+      ]
     })
     .compileComponents();
   }));

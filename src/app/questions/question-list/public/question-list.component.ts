@@ -35,7 +35,7 @@ export class QuestionListComponent {
 	private componentRefs;
 	private questionsAnswered = 0;
 	private routesSubscription;
-	public pageSubject:any;
+	public  pageSubject:any;
 
 	constructor(
 		private qss: QuestionListService,
