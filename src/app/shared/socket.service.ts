@@ -51,6 +51,16 @@ export class SocketService {
         
         return prefix;
     }
+    
+    //Fetch an asset collection from a socket
+    fetch(asset_type: string, project_id){
+        let dto:any     = {};
+        dto.project_id  = project_id;
+        dto.msg         = `fetch:${asset_type}`;
+
+        //console.log('emitting msg: ', dto);
+        this.socket.emit(dto.msg, dto);
+    }
 
     // Create signal
     save(dto: any) {

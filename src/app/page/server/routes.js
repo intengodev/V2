@@ -21,9 +21,8 @@ module.exports  = function(app, io){
     var nsp = io.of('/api/pages'); 
     nsp.on('connection', function (socket) {
         console.log('Pages Socket Namespace Connected');
-        socket.emit('news', { hello: 'world' });
-        socket.on('my other event', function (data) {
-            console.log(data);
+        socket.on('fetch:pages', function(dto){
+            PagesController.all(dto, socket);
         });
     });
 }; 

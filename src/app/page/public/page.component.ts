@@ -132,8 +132,9 @@ export class PageComponent {
 
 	fetch(params){
 		this.pageService.fetchPagesData(params['project_id']).subscribe( page_resp => {
-			var data   = page_resp.json();
+			var data   = page_resp.item.pages;
 			this.pageService.setPagesData(data); //cache the data in the service to avoid subsequent page calls
+			
 			this.refreshPageData(params, data);
 		});
 	}

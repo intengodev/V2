@@ -46,13 +46,6 @@ app.get('/', function (req, res) {
 //API Root
 app.get('/api', function (req, res) { res.send('API Root'); });
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
 //Set the ports
 if (app.get('env == "development"')){
     server.listen(3000, function () {

@@ -5,7 +5,7 @@ import { Http } 			from '@angular/http';
 import { Observable } 		from "rxjs";
 import { BehaviorSubject }  from 'rxjs/BehaviorSubject';
  
-import { SocketService } 	from "./../../shared/socket.service.ts";
+import { SocketService } 	from "./../../shared/socket.service";
 
 var self;
 
@@ -14,7 +14,8 @@ export class PageService {
 	private host: string = window.location.protocol + "//" + window.location.hostname + ":" + window.location.port;
 	private endpoint = '/api/pages';
 	private pageSubject: BehaviorSubject<any> = new BehaviorSubject({});
-  
+  	public  socketObservable;
+
 	private project_id;
 	private user_id;
 	public  page_idx;
@@ -31,9 +32,10 @@ export class PageService {
 	}
 
 	initSocket(){
-		this.socketService 	= new SocketService();
-		this.socketService.get('/pages')
-		.subscribe((socketItem) => {
+		this.socketService 	  = new SocketService();
+		this.socketObservable = this.socketService.get('/pages');
+		
+		this.socketObservable.subscribe((socketItem) => {
 			console.log('socket message: ', socketItem);
 		}, 
 		err => console.error('socket error: ', err));
@@ -60,9 +62,12 @@ export class PageService {
 	
 	/**
 	 * Fetches all pages data for project
+	 * TODO://Change the message the socketObservable submits upon success
+	 * TODO:// Come up with a dto interface
 	 */
   	fetchPagesData(project_id){
-		return this.http.get(`${this.endpoint}/${project_id}`);
+		this.socketService.fetch('pages', project_id);
+		return this.socketObservable;
   	}
 	
 	/**
