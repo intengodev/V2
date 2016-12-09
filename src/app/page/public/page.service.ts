@@ -26,19 +26,22 @@ export class PageService {
 	}
 
 	init(){
-		console.log('initing page service');
+		//console.log('initing page service');
 		this.initSocket();
 		this.delegateEvents();
+	}
+	
+	/**
+	 * Catches socket events that are being listend for
+	 */
+	delegateSocketAction(socketItem){
+		console.log('socket msg: ', socketItem);
 	}
 
 	initSocket(){
 		this.socketService 	  = new SocketService();
 		this.socketObservable = this.socketService.get('/pages');
-		
-		this.socketObservable.subscribe((socketItem) => {
-			console.log('socket message: ', socketItem);
-		}, 
-		err => console.error('socket error: ', err));
+		this.socketObservable.subscribe( socketItem => this.delegateSocketAction );
 	}
 
 	setParamsFromRouter(params){

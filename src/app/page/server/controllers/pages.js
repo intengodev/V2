@@ -14,9 +14,9 @@ exports.all = function(dto, socket){
         resp.status = 'success';
        
         if(resp.status == 'success'){
-            socket.emit('item:save:success', resp);
+            socket.emit('pages:success', resp); 
         } else {
-            socket.emit('item:save:error', resp);
+            socket.emit('pages:error', resp);
         } 
 	});
 }

@@ -18,7 +18,8 @@ export class SocketService {
     get(name: string): Observable<any> {
         this.name = name;
         let socketUrl = this.host + this.port + "/api" + this.name;
-        console.log('Attempting to connect socket to: ' + socketUrl);
+        //console.log('Attempting to connect socket to: ' + socketUrl);
+
         this.socket = io.connect(socketUrl);
 
         this.socket.on("connect", () => this.connect());
@@ -29,8 +30,15 @@ export class SocketService {
 
         // Return observable which follows "create" and "remove" signals from socket stream
         return Observable.create((observer: any) => {
-            this.socket.on("item:save:success", (item: any) => observer.next({ action: "item:save:success", item: item }) );
-            this.socket.on("item:save:error", (item: any) => observer.next({ action: "item:save:error", item: item }) );
+            //TODO: Delegate here & improve messages
+            let name        = this.name.slice(1);
+            let success_msg = `${name}:success`;
+            let err_msg     = `${name}:error`;
+            
+            console.log('listening for: ', success_msg);
+
+            this.socket.on(success_msg, (item: any) => observer.next({ action: success_msg, item: item }) );
+            this.socket.on(err_msg, (item: any)     => observer.next({ action: err_msg, item: item }) );
             return () => this.socket.close();
         });
     }
@@ -67,7 +75,7 @@ export class SocketService {
         let prefix = this.resolveEmissionPrefix(dto)
         let msg    = `${prefix}:save`;
 
-        console.log(`emitting ${msg} with: `, dto);
+        //console.log(`emitting ${msg} with: `, dto);
         this.socket.emit(msg, dto);
     }
 
@@ -77,9 +85,10 @@ export class SocketService {
     }
 
     // Handle connection opening
+    //TODO: Consider putting the initial fetch here instead of having to do a seperate call
     private connect() {
         window['socket'] = this.socket;
-        console.log(`Connected to "${this.name}"`);
+        //console.log(`Connected to "${this.name}"`);
 
         // Request initial list when connected
         this.socket.emit("list");

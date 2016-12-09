@@ -33,7 +33,7 @@ export class QuestionComponent {
 	let dto  = child.extractDtoFromTarget(target);
 	if(typeof dto.selection_type !== 'undefined' && dto.selection_type !== 'multi'){
 		child.postData(dto).subscribe( dto => {
-			if(dto.action == 'item:save:success'){
+			if(dto.action == 'questions:success'){
 				this['pageSubject'].next({
 					action: 'question:selection:made',
 					data: dto

@@ -28,9 +28,9 @@ module.exports  = function(app, io){
             var resp = QuestionsController.proxyEvents(dto);
 
             if(resp.status == 'success'){
-                socket.emit('item:save:success', dto);
+                socket.emit('questions:success', dto);
             } else {
-                socket.emit('item:save:error', dto);
+                socket.emit('questions:error', dto);
             }
         });
     });
