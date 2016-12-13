@@ -1,5 +1,5 @@
 module.exports = {
-    "app_root": "./../../.." + __dirname,
+    "app_root": __dirname + "/../../",
     "configurables": [
         "statics",
         "packages",

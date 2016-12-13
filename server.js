@@ -13,7 +13,7 @@ var db                          = require(__dirname + '/config/dev/db');
 
 var shared_config               = require(__dirname + '/config/shared/config');
 
-var core                        = require(__dirname + '/platform/core')(app, shared_config, express);
+var core                        = require(__dirname + '/platform/core')(app, shared_config, express, io);
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
@@ -26,17 +26,6 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-
-//Mount the routes and sockets
-require(__dirname + '/src/app/project/server/routes')(app, io);
-require(__dirname + '/src/app/page/server/routes')(app, io);
-require(__dirname + '/src/app/response/server/routes')(app, io);
-require(__dirname + '/src/app/participant/server/routes')(app, io);
-require(__dirname + '/src/app/user/server/routes')(app, io);
-require(__dirname + '/src/app/questions/checkbox-question/server/routes')(app, io);
-require(__dirname + '/src/app/questions/matrix-question/server/routes')(app, io);
-require(__dirname + '/src/app/questions/question/server/routes')(app, io);
-
 
 //SPA Root
 app.get('/', function (req, res) {
