@@ -1,43 +1,53 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { HttpModule, Http, BaseRequestOptions } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
-
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-
-import { PageService }		   from './../../../page/public/page.service';
-import { SocketService } 	   from "../../../shared/socket.service";
+import * as tst from '../../../../test/index';
+import { SocketService, MockSocketService } from '../../../../test/index';
 
 import { RatingQuestionComponent } from './rating-question.component';
 
 describe('RatingQuestionComponent', () => {
   let component: RatingQuestionComponent;
-  let fixture: ComponentFixture<RatingQuestionComponent>;
+  let fixture: tst.ComponentFixture<tst.RatingQuestionComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ RatingQuestionComponent ],
-      providers: [
-        PageService,
-        SocketService,
+  beforeEach(tst.async(() => {
+    tst.TestBed.configureTestingModule({
+      declarations: [ 
+        tst.PageComponent,
+        tst.QuestionListComponent,
+        tst.ProgressBarComponent,
+        tst.CheckboxQuestionComponent,
+        tst.RadioQuestionComponent,
+        tst.MatrixQuestionComponent,
+        tst.RatingQuestionComponent 
+      ],
+      providers: 
+      [
+        tst.QuestionListService,
+        tst.PageService,
+        tst.MockBackend,
+        tst.BaseRequestOptions,
         {
-          provide: Http,
+          provide: tst.Http,
           useFactory: (mockBackend, options) => {
-            return new Http(mockBackend, options)
+            return new tst.Http(mockBackend, options)
           },
-          deps: [MockBackend, BaseRequestOptions]
+          deps: [ tst.MockBackend, tst.BaseRequestOptions]
         },
-        MockBackend,
-        BaseRequestOptions
-      ]
+        {
+          provide: SocketService,
+          useFactory: function() {
+            return new MockSocketService()
+          }
+        }
+      ],
+      imports: [
+        tst.RouterTestingModule.withRoutes(tst.ROUTES)
+      ]  
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RatingQuestionComponent);
+    fixture = tst.TestBed.createComponent(RatingQuestionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

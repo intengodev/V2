@@ -11,7 +11,7 @@ export class MockSocketService {
     private host:string = window.location.protocol + "//" + window.location.hostname + ":";
     socket: {};
 
-    constructor() {}
+    constructor() { console.log('mock socket service connecting'); }
 
     // Get items observable
     get(name: string): Observable<any> {

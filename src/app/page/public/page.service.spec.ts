@@ -1,37 +1,47 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
-
-import { HttpModule, Http, BaseRequestOptions } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
-import { RouterTestingModule }    from '@angular/router/testing';
-
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-
-import { SocketService } 	   from "./../../shared/socket.service";
-
-import { PageService }            from './page.service';
+import * as tst from '../../../test/index';
+import { SocketService, MockSocketService } from '../../../test/index';
 
 describe('Service: PageService', () => {
+  console.log('PageService Spec');
+  
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [
-        PageService,
-        SocketService,
-        MockBackend,
-        BaseRequestOptions,
-        {
-          provide: Http,
-          useFactory: (mockBackend, options) => {
-            return new Http(mockBackend, options)
-          },
-          deps: [ MockBackend, BaseRequestOptions]
-        }
+    tst.TestBed.configureTestingModule({
+      schemas: [ tst.CUSTOM_ELEMENTS_SCHEMA ],
+      declarations: [ 
+        tst.AppComponent,
+        tst.PageComponent,
+        tst.QuestionListComponent,
+        tst.ProgressBarComponent,
+        tst.CheckboxQuestionComponent,
+        tst.RadioQuestionComponent,
+        tst.MatrixQuestionComponent,
+        tst.RatingQuestionComponent 
       ],
+      providers: 
+      [
+        tst.QuestionListService,
+        tst.PageService,
+        tst.MockBackend,
+        tst.BaseRequestOptions,
+        {
+          provide: tst.Http,
+          useFactory: (mockBackend, options) => {
+            return new tst.Http(mockBackend, options)
+          },
+          deps: [ tst.MockBackend, tst.BaseRequestOptions]
+        },
+        {
+          provide: SocketService,
+          useFactory: function() {
+            return new MockSocketService()
+          }
+        }
+      ]
     });
   });
 
-  it('should ...', inject([PageService], (service: PageService) => {
+  it('should ...', tst.inject([tst.PageService], (service: tst.PageService) => {
     expect(service).toBeTruthy();
   }));
 });

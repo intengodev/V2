@@ -1,43 +1,41 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { HttpModule, Http, BaseRequestOptions } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
-
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-
-import { PageService }		   from './../../../page/public/page.service';
-import { SocketService } 	   from "../../../shared/socket.service";
-
-import { QuestionComponent } from './question.component';
+import * as tst from '../../../../test/index';
+import { SocketService, MockSocketService } from '../../../../test/index';
 
 describe('QuestionComponent', () => {
-  let component: QuestionComponent;
-  let fixture: ComponentFixture<QuestionComponent>;
+  console.log('Question Spec');
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ QuestionComponent ],
+  let component: tst.QuestionComponent;
+  let fixture: tst.ComponentFixture<tst.QuestionComponent>;
+
+  beforeEach(tst.async(() => {
+    tst.TestBed.configureTestingModule({
+      declarations: [ tst.QuestionComponent ],
       providers: [
-        PageService,
-        SocketService,
+        tst.QuestionListService,
+        tst.PageService,
+        tst.MockBackend,
+        tst.BaseRequestOptions,
         {
-          provide: Http,
+          provide: tst.Http,
           useFactory: (mockBackend, options) => {
-            return new Http(mockBackend, options)
+            return new tst.Http(mockBackend, options)
           },
-          deps: [MockBackend, BaseRequestOptions]
+          deps: [ tst.MockBackend, tst.BaseRequestOptions]
         },
-        MockBackend,
-        BaseRequestOptions
+        {
+          provide: SocketService,
+          useFactory: function() {
+            return new MockSocketService()
+          }
+        }
       ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QuestionComponent);
+    fixture = tst.TestBed.createComponent(tst.QuestionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

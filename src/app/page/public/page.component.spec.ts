@@ -8,11 +8,12 @@
  * - Add some specificity to the tests to actually test stuff
  */
 import * as tst from '../../../test/index';
+import { SocketService, MockSocketService } from '../../../test/index';
 
 describe('PageComponent', () => {
   let component: tst.PageComponent;
   let fixture: tst.ComponentFixture<tst.PageComponent>;
-
+ 
   beforeEach(tst.async(() => {
     tst.TestBed.configureTestingModule({
       declarations: [ 
@@ -29,7 +30,6 @@ describe('PageComponent', () => {
       [
         tst.QuestionListService,
         tst.PageService,
-        tst.SocketService,
         tst.MockBackend,
         tst.BaseRequestOptions,
         {
@@ -38,6 +38,12 @@ describe('PageComponent', () => {
             return new tst.Http(mockBackend, options)
           },
           deps: [ tst.MockBackend, tst.BaseRequestOptions]
+        },
+        {
+          provide: SocketService,
+          useFactory: function() {
+            return new MockSocketService()
+          }
         }
       ],
       imports: [

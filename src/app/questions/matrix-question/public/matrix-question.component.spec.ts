@@ -1,58 +1,51 @@
 /* tslint:disable:no-unused-variable */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { DebugElement } from '@angular/core';
-
-import { HttpModule, Http, BaseRequestOptions } from '@angular/http';
-import { MockBackend } from '@angular/http/testing';
-
-import { Router, RouterModule, RouterOutlet, ActivatedRoute }   from '@angular/router';
-import { RouterTestingModule }    from '@angular/router/testing';
-
-import { PageService }		   from './../../../page/public/page.service';
-import { SocketService } 	   from "../../../shared/socket.service";
-import { QuestionListService }        from './../../question-list/public/question-list-service';
-
-import { MatrixQuestionComponent } from './matrix-question.component';
+import * as tst from '../../../../test/index';
+import { SocketService, MockSocketService } from '../../../../test/index';
 
 describe('MatrixQuestionComponent', () => {
-  let component: MatrixQuestionComponent;
-  let fixture: ComponentFixture<MatrixQuestionComponent>;
+  let component: tst.MatrixQuestionComponent;
+  let fixture: tst.ComponentFixture<tst.MatrixQuestionComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ MatrixQuestionComponent ],
-      providers: [
-        QuestionListService,
-        PageService,
-        SocketService,
+  beforeEach(tst.async(() => {
+    tst.TestBed.configureTestingModule({
+      declarations: [ 
+        tst.PageComponent,
+        tst.QuestionListComponent,
+        tst.ProgressBarComponent,
+        tst.CheckboxQuestionComponent,
+        tst.RadioQuestionComponent,
+        tst.MatrixQuestionComponent,
+        tst.RatingQuestionComponent 
+      ],
+      providers: 
+      [
+        tst.QuestionListService,
+        tst.PageService,
+        tst.MockBackend,
+        tst.BaseRequestOptions,
         {
-          provide: Http,
+          provide: tst.Http,
           useFactory: (mockBackend, options) => {
-            return new Http(mockBackend, options)
+            return new tst.Http(mockBackend, options)
           },
-          deps: [MockBackend, BaseRequestOptions]
+          deps: [ tst.MockBackend, tst.BaseRequestOptions]
         },
-        MockBackend,
-        BaseRequestOptions,
         {
-          provide: Router,
-          useClass: class {
-              navigate = jasmine.createSpy("navigate");
+          provide: SocketService,
+          useFactory: function() {
+            return new MockSocketService()
           }
-        },
-        {
-          provide: ActivatedRoute,
-          useClass: class { }
         }
       ],
-      imports: [RouterModule]
+      imports: [
+        tst.RouterTestingModule.withRoutes(tst.ROUTES)
+      ]  
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(MatrixQuestionComponent);
+    fixture = tst.TestBed.createComponent(tst.MatrixQuestionComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
