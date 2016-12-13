@@ -1,29 +1,46 @@
 /* tslint:disable:no-unused-variable */
 import * as tst from '../../../test/index';
-import { SocketService, MockSocketService } from '../../../test/index';
+import { 
+  AppComponent,
+  SocketService, 
+  MockSocketService,
+  PageComponent,
+  QuestionListComponent,
+  ProgressBarComponent,
+  CheckboxQuestionComponent,
+  RadioQuestionComponent,
+  MatrixQuestionComponent,
+  RatingQuestionComponent,
+  QuestionListService,
+  PageService,
+  MockBackend,
+  BaseRequestOptions,
+  async,
+  inject,
+  TestBed
+} from '../../../test/index';
+import { Observable } from 'rxjs/Observable';
 
-describe('Service: PageService', () => {
-  console.log('PageService Spec');
-  
+describe('Service: PageService', () => {  
   beforeEach(() => {
-    tst.TestBed.configureTestingModule({
+    TestBed.configureTestingModule({
       schemas: [ tst.CUSTOM_ELEMENTS_SCHEMA ],
       declarations: [ 
-        tst.AppComponent,
-        tst.PageComponent,
-        tst.QuestionListComponent,
-        tst.ProgressBarComponent,
-        tst.CheckboxQuestionComponent,
-        tst.RadioQuestionComponent,
-        tst.MatrixQuestionComponent,
-        tst.RatingQuestionComponent 
+        AppComponent,
+        PageComponent,
+        QuestionListComponent,
+        ProgressBarComponent,
+        CheckboxQuestionComponent,
+        RadioQuestionComponent,
+        MatrixQuestionComponent,
+        RatingQuestionComponent 
       ],
       providers: 
       [
-        tst.QuestionListService,
-        tst.PageService,
-        tst.MockBackend,
-        tst.BaseRequestOptions,
+        QuestionListService,
+        PageService,
+        MockBackend,
+        BaseRequestOptions,
         {
           provide: tst.Http,
           useFactory: (mockBackend, options) => {
@@ -41,7 +58,11 @@ describe('Service: PageService', () => {
     });
   });
 
-  it('should ...', tst.inject([tst.PageService], (service: tst.PageService) => {
+  it('should create a page service', inject([PageService], (service: PageService) => {
     expect(service).toBeTruthy();
+  }));
+
+  it('should have a page socket observable', inject([tst.PageService], (service: PageService) => {
+    expect(service.socketObservable instanceof Observable).toBeTruthy();
   }));
 });

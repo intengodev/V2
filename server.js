@@ -11,6 +11,10 @@ var cookieParser                = require('cookie-parser');
 var bodyParser                  = require('body-parser'); 
 var db                          = require(__dirname + '/config/dev/db');
 
+var shared_config               = require(__dirname + '/config/shared/config');
+
+var core                        = require(__dirname + '/platform/core')(app, shared_config, express);
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -22,10 +26,6 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-
-//Set statics
-app.use(express.static(__dirname + '/dist'));
-app.use(express.static(__dirname + '/src'));
 
 //Mount the routes and sockets
 require(__dirname + '/src/app/project/server/routes')(app, io);

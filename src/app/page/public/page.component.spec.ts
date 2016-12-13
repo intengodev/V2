@@ -8,36 +8,54 @@
  * - Add some specificity to the tests to actually test stuff
  */
 import * as tst from '../../../test/index';
-import { SocketService, MockSocketService } from '../../../test/index';
+import { 
+  AppComponent,
+  SocketService, 
+  MockSocketService,
+  PageComponent,
+  QuestionListComponent,
+  ProgressBarComponent,
+  CheckboxQuestionComponent,
+  RadioQuestionComponent,
+  MatrixQuestionComponent,
+  RatingQuestionComponent,
+  QuestionListService,
+  PageService,
+  MockBackend,
+  BaseRequestOptions,
+  async,
+  inject,
+  TestBed
+} from '../../../test/index';
 
 describe('PageComponent', () => {
   let component: tst.PageComponent;
   let fixture: tst.ComponentFixture<tst.PageComponent>;
  
-  beforeEach(tst.async(() => {
-    tst.TestBed.configureTestingModule({
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
       declarations: [ 
-        tst.AppComponent,
-        tst.PageComponent,
-        tst.QuestionListComponent,
-        tst.ProgressBarComponent,
-        tst.CheckboxQuestionComponent,
-        tst.RadioQuestionComponent,
-        tst.MatrixQuestionComponent,
-        tst.RatingQuestionComponent 
+        AppComponent,
+        PageComponent,
+        QuestionListComponent,
+        ProgressBarComponent,
+        CheckboxQuestionComponent,
+        RadioQuestionComponent,
+        MatrixQuestionComponent,
+        RatingQuestionComponent 
       ],
       providers: 
       [
-        tst.QuestionListService,
-        tst.PageService,
-        tst.MockBackend,
-        tst.BaseRequestOptions,
+        QuestionListService,
+        PageService,
+        MockBackend,
+        BaseRequestOptions,
         {
           provide: tst.Http,
           useFactory: (mockBackend, options) => {
             return new tst.Http(mockBackend, options)
           },
-          deps: [ tst.MockBackend, tst.BaseRequestOptions]
+          deps: [ MockBackend, BaseRequestOptions]
         },
         {
           provide: SocketService,
@@ -54,7 +72,7 @@ describe('PageComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = tst.TestBed.createComponent(tst.PageComponent);
+    fixture = TestBed.createComponent(PageComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
