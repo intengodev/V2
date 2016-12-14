@@ -9,11 +9,12 @@ var path                        = require('path');
 var logger                      = require('morgan');
 var cookieParser                = require('cookie-parser');
 var bodyParser                  = require('body-parser'); 
-var db                          = require(__dirname + '/config/dev/db');
 
+var db                          = require(__dirname + '/config/dev/db');
 var shared_config               = require(__dirname + '/config/shared/config');
 
-var core                        = require(__dirname + '/platform/core')(app, shared_config, express, io);
+//Initialize the App Core
+require(__dirname + '/platform/core')(app, shared_config, express, io);
 
 app.use(logger('dev'));
 app.use(bodyParser.json());

@@ -4,20 +4,17 @@
  * - Work on naming conventions for shared configs
  */
 
-global.express;
-global.app;
-global.io;
-
-var fs = require('fs');
-
+var fs          = require('fs');
+var logger      = require('morgan');
+var _core;
 /**
  * The Platform core
  */
-var Core = function(app, config, express, io){
-    global['_core'] = this;
-    global.express  = express;
-    global.app      = app;
-    global.io       = io;
+var Core  = function(app, config, express, io){
+    _core = this;
+    _core.express   = express;
+    _core.app       = app;
+    _core.io        = io;
 
     this.init(app, config);
 };
@@ -35,6 +32,9 @@ Core.prototype.init = function(app, config){
     return this;
 }
 
+/**
+ * Registers configurables within the core
+ */
 Core.prototype.registerConfigurables = function(config){
     if(typeof config.configurables == 'undefined') return;
 
@@ -50,7 +50,7 @@ Core.prototype.registerConfigurables = function(config){
 Core.prototype.set_statics = function(config){
     config.statics.forEach(function(_static){
         var path = _core.config.app_root + _static;   
-        app.use(express.static(path));
+        this.app.use(this.express.static(path));
     }, _core);
 }
 
@@ -61,8 +61,8 @@ Core.prototype.set_packages = function(config){
     config.packages.forEach(function(package){
         var path = this.tmp.package_path + package + '/server/routes.js';
         if (fs.existsSync(path)) {
-            console.log('Mounting package for path: ' + path);
-            require(path)(app, io);
+            //console.log('Mounting package for path: ' + path);
+            require(path)(this.app, this.io);
         } else {
             console.error('package not found at path: ' + path);
         }
