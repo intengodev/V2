@@ -23,9 +23,10 @@ var Engine = function(config){
  * Setup the server and its capabilities
  */
 Engine.prototype.init = function(express, app, server, io){
-    this.app     = app,
-    this.io      = io,
-    this.express = express;
+    this.environment = app.get('env');
+    this.app         = app,
+    this.io          = io,
+    this.express     = express;
     
     this.registerMiddleware(app);
     this.listen(this.config.engine.port);
@@ -38,7 +39,7 @@ Engine.prototype.init = function(express, app, server, io){
  */
 Engine.prototype.registerMiddleware = function(app){
     this.config.middleware(app).forEach(function(middleware){
-        console.log('registering middleware for: ' + middleware.name);
+        //console.log('registering middleware for: ' + middleware.name);
         app.use(middleware.val);
     }, this);
 }

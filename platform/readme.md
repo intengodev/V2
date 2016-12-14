@@ -10,6 +10,10 @@ corresponding `set_[property_name]` method on it where property name is
 the name of the configurable and has a corresponding property name in the 
 config file.
 
+#####Middleware
+Express middeware. Seperated out into its own file. Instructions on it are in the file.
+Super simple.
+
 #####Packages
 A package is a loose term describing both the front end and back end code
 for a single module. So, users, or questions for instance. All of the services,

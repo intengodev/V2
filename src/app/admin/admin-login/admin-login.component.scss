@@ -1,0 +1,13 @@
+
+//Override the defaults
+body {
+    background-image: none;
+    background: #efefef;
+}
+
+.screen { display: none; }
+
+app-admin-home {
+    color: #555;
+    p, span, h1, h2, h3, h4 { color: #555; }
+}

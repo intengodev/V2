@@ -11,6 +11,7 @@ import { LocationStrategy,
 
 import { PageService }                from './page/public/page.service';
 import { SocketService }              from './shared/socket.service';
+import { AuthGuard }                  from './admin/shared/auth-guard.service';
 
 import { AppComponent }               from './app.component';
 import { ProgressBarComponent }       from './progress-bar/progress-bar.component';
@@ -27,6 +28,8 @@ import { MatrixQuestionComponent }    from './questions/matrix-question/public/m
 
 
 import { AppRoutingModule }           from './app-routing.module';
+import { AdminLoginComponent } from './admin/admin-login/admin-login.component';
+import { AdminHomeComponent } from './admin/admin-home/admin-home.component';
 
 @NgModule({
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
@@ -39,7 +42,9 @@ import { AppRoutingModule }           from './app-routing.module';
     ProgressBarComponent,
     QuestionListComponent,
     RatingQuestionComponent,
-    MatrixQuestionComponent
+    MatrixQuestionComponent,
+    AdminLoginComponent,
+    AdminHomeComponent
   ],
   imports: [
     BrowserModule,
@@ -48,6 +53,7 @@ import { AppRoutingModule }           from './app-routing.module';
     AppRoutingModule
   ],
   providers: [
+    AuthGuard,
     QuestionListService,
     PageService,
     SocketService,

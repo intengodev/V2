@@ -1,5 +1,9 @@
 
 /**
+ * TODOS:
+ * - Figure out how to get typescript on this asap. 
+ * - Make this editable via the backend
+ * 
  * See the platform/readme.md for more info 
  * */ 
 

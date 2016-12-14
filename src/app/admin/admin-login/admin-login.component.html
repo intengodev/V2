@@ -1,0 +1,17 @@
+
+
+<div class="ui text container">
+  <form class="ui form one column">
+    <div class="field">
+      <label>Username</label>
+      <input type="text" #username name="username" placeholder="username" required>
+    </div>
+    
+    <div class="field">
+      <label>Password</label>
+      <input type="password" #password name="password" placeholder="password" required>
+    </div>
+    
+    <button class="ui button" type="submit" routerLink="home" [queryParams]="{password: password.value, username: username.value}">Submit</button>
+  </form>
+</div>
