@@ -1,5 +1,12 @@
+
+var middleware = require('./../../platform/middleware')
+
 module.exports = {
     "app_root": __dirname + "/../../",
+    "engine": {
+        "name": "express",
+        "port": 8080
+    },
     "configurables": [
         "statics",
         "packages",
@@ -9,6 +16,7 @@ module.exports = {
         'dist',
         'src'
     ],
+    "middleware": middleware,
     packages: [
         'project',
         'page',
